@@ -1,10 +1,7 @@
 package com.io.gazette.data.api.mappers
 
-import com.io.gazette.data.api.models.GetTopStoriesByCategoryResponse
 import com.io.gazette.data.api.models.Result
-import com.io.gazette.data.api.models.Subtype
-import com.io.gazette.data.api.models.Type
-import com.io.gazette.data.domain.models.NewsItem
+import com.io.gazette.domain.models.NewsItem
 import com.io.gazette.utils.DateTimeUtils
 
 fun Result.toDomainNewsItem() = NewsItem(

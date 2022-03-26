@@ -1,4 +1,4 @@
-package com.io.gazette.data.domain.models
+package com.io.gazette.domain.models
 
 import org.threeten.bp.LocalDateTime
 
