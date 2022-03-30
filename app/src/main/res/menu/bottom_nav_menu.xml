@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_home_bottom_nav"
+        app:exb_color="@color/white"
+        android:title="@string/home_string"
+        android:visible="true"/>
+
+    <item
+        android:id="@+id/bookmarkedFragment"
+        android:enabled="true"
+        app:exb_color="@color/white"
+        android:icon="@drawable/ic_bookmark_icon_filled"
+        android:visible="true"
+        android:title="@string/bookmarks_string" />
+</menu>

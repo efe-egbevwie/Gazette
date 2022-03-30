@@ -14,6 +14,10 @@ localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 android {
     compileSdk 32
 
+    buildFeatures {
+        viewBinding true
+    }
+
     defaultConfig {
         applicationId "com.io.gazette"
         minSdk 21
@@ -48,6 +52,7 @@ android {
 
 dependencies {
 
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     def lifecycle_version = "2.5.0-alpha04"
     def nav_version = "2.4.1"
 
@@ -93,7 +98,9 @@ dependencies {
 
     //Date time library
     implementation "com.jakewharton.threetenabp:threetenabp:1.3.1"
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
 
+    implementation 'com.github.st235:expandablebottombar:1.4.0'
 
 
 
