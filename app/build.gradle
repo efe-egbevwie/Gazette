@@ -16,98 +16,114 @@ android {
 
     buildFeatures {
         viewBinding true
-    }
+        compose true
 
-    defaultConfig {
-        applicationId "com.io.gazette"
-        minSdk 21
-        targetSdk 32
-        versionCode 1
-        versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        defaultConfig {
+            applicationId "com.io.gazette"
+            minSdk 21
+            targetSdk 32
+            versionCode 1
+            versionName "1.0"
 
-    }
-
-    buildTypes {
-        debug {
-            buildConfigField "String", "NYT_API_KEY", localProperties.getProperty('NEW_YORK_TIMES_API_KEY')
+            testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         }
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+        buildTypes {
+            debug {
+                buildConfigField "String", "NYT_API_KEY", localProperties.getProperty('NEW_YORK_TIMES_API_KEY')
+
+            }
+            release {
+                minifyEnabled false
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            }
+
+
         }
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
+        kotlinOptions {
+            jvmTarget = '1.8'
+        }
+        composeOptions {
+            kotlinCompilerExtensionVersion '1.1.1'
+        }
+    }
+
+    dependencies {
+
+        implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+        def lifecycle_version = "2.5.0-alpha04"
+        def nav_version = "2.4.1"
+
+        //The timber library for better logging
+        implementation 'com.jakewharton.timber:timber:4.7.1'
+
+
+        //Lifecycle
+        implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+        implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
+        implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+
+
+        implementation 'androidx.core:core-ktx:1.7.0'
+        implementation 'androidx.appcompat:appcompat:1.4.1'
+        implementation 'com.google.android.material:material:1.5.0'
+        implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+        testImplementation 'junit:junit:4.13.2'
+        androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+        androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+        //Kotlin-x serialization libraries
+        implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2"
+        implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.2"
+        implementation 'com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0'
+
+
+        //Retrofit and networking
+        implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+        implementation 'com.squareup.okhttp3:okhttp:4.9.1'
+        implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
+
+        //coroutines
+        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0'
+        implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
+
+        //Image handling
+        implementation "com.squareup.picasso:picasso:2.71828"
+
+        //Jetpack navigation
+        implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+        implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+        //Date time library
+        implementation "com.jakewharton.threetenabp:threetenabp:1.3.1"
+        implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
+
+        implementation 'com.github.st235:expandablebottombar:1.4.0'
+
+
+        //compose
+        implementation 'androidx.compose.ui:ui:1.1.1'
+        implementation 'androidx.compose.ui:ui-tooling:1.1.1'
+        implementation 'androidx.compose.foundation:foundation:1.1.1'
+        implementation 'androidx.compose.material:material:1.1.1'
+        implementation 'androidx.compose.material:material-icons-core:1.1.1'
+        implementation 'androidx.activity:activity-compose:1.4.0'
+        implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1'
+        implementation 'androidx.compose.runtime:runtime-livedata:1.1.1'
+        implementation 'androidx.compose.runtime:runtime-rxjava2:1.1.1'
+        implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0"
+
+        implementation("io.coil-kt:coil-compose:2.0.0-rc02")
+
+
 
 
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-}
-
-dependencies {
-
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    def lifecycle_version = "2.5.0-alpha04"
-    def nav_version = "2.4.1"
-
-    //The timber library for better logging
-    implementation 'com.jakewharton.timber:timber:4.7.1'
-
-
-    //Lifecycle
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-
-
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
-    //Kotlin-x serialization libraries
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-core:1.3.2"
-    implementation 'com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0'
-
-
-    //Retrofit and networking
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
-
-    //coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
-
-    //Image handling
-    implementation "com.squareup.picasso:picasso:2.71828"
-
-    //Jetpack navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
-
-    //Date time library
-    implementation "com.jakewharton.threetenabp:threetenabp:1.3.1"
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
-
-    implementation 'com.github.st235:expandablebottombar:1.4.0'
-
-
-
-
-
-
-
-
 }
 
