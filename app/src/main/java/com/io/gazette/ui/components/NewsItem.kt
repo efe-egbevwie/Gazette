@@ -2,6 +2,7 @@ package com.io.gazette.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.io.gazette.R
 import com.io.gazette.domain.models.NewsItem
 
@@ -38,18 +41,22 @@ fun PreviewNewsListItem() {
         writer = "Efe"
     )
 
-    NewsListItem(newsItem = newsItem)
+    NewsListItem(newsItem = newsItem, onItemClick = {} )
 }
 
 
-
 @Composable
-fun NewsListItem(newsItem: NewsItem, modifier: Modifier = Modifier) {
+fun NewsListItem(
+    newsItem: NewsItem,
+    modifier: Modifier = Modifier,
+    onItemClick: (NewsItem) -> Unit
+) {
     Card(
         modifier = modifier
             .fillMaxSize()
-            .padding(10.dp),
-        border = BorderStroke(8.dp, color = MaterialTheme.colors.onSurface),
+            .padding(10.dp)
+            .clickable { onItemClick(newsItem) },
+        border = BorderStroke(1.dp, color = MaterialTheme.colors.onSurface),
         elevation = 8.dp,
         shape = RoundedCornerShape(8.dp)
     ) {
@@ -59,8 +66,8 @@ fun NewsListItem(newsItem: NewsItem, modifier: Modifier = Modifier) {
         ) {
             val (photo, title, author, abstract) = createRefs()
 
-            Image(
-                painterResource(id = R.drawable.ic_web_3_0),
+            AsyncImage(
+                model = newsItem.photoUrl,
                 contentDescription = "News Item Image",
                 modifier = modifier
                     .fillMaxWidth()
@@ -70,6 +77,7 @@ fun NewsListItem(newsItem: NewsItem, modifier: Modifier = Modifier) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
+                        bottom.linkTo(title.top)
                     }
 
             )

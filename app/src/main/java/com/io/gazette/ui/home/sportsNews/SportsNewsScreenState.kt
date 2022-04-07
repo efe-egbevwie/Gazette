@@ -1,4 +1,4 @@
-package com.io.gazette.ui.home
+package com.io.gazette.ui.home.sportsNews
 
 import com.io.gazette.domain.models.NewsItem
 

@@ -7,12 +7,17 @@
         <entry key="..\:/Android Projects/Gazette/app/src/main/res/drawable/ic_home_bottom_nav.xml" value="0.1145" />
         <entry key="..\:/Android Projects/Gazette/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Android Projects/Gazette/app/src/main/res/layout/fragment_bookmarks.xml" value="0.25" />
+        <entry key="..\:/Android Projects/Gazette/app/src/main/res/layout/fragment_business_news.xml" value="0.2509057971014493" />
         <entry key="..\:/Android Projects/Gazette/app/src/main/res/layout/fragment_detail.xml" value="0.25" />
+        <entry key="..\:/Android Projects/Gazette/app/src/main/res/layout/fragment_health_news.xml" value="0.2509057971014493" />
         <entry key="..\:/Android Projects/Gazette/app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="..\:/Android Projects/Gazette/app/src/main/res/layout/fragment_sports_news.xml" value="0.2509057971014493" />
+        <entry key="..\:/Android Projects/Gazette/app/src/main/res/layout/fragment_world_news.xml" value="0.18840579710144928" />
         <entry key="..\:/Android Projects/Gazette/app/src/main/res/menu/bottom_nav_menu.xml" value="0.2755208333333333" />
       </map>
     </option>
   </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

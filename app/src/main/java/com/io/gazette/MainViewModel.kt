@@ -1,18 +1,27 @@
 package com.io.gazette
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.io.gazette.domain.useCases.MainViewModelUseCases
-import com.io.gazette.ui.home.BusinessNewsScreenState
-import com.io.gazette.ui.home.HealthNewsScreenState
-import com.io.gazette.ui.home.SportsNewsScreenState
-import com.io.gazette.ui.home.WorldNewsScreenState
+import com.io.gazette.ui.home.businessNews.BusinessNewsScreenState
+import com.io.gazette.ui.home.healthNews.HealthNewsScreenState
+import com.io.gazette.ui.home.sportsNews.SportsNewsScreenState
+import com.io.gazette.ui.home.worldNews.WorldNewsScreenState
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 
 class MainViewModel(private val mainViewModelUseCases: MainViewModelUseCases) : ViewModel() {
 
+
+    init {
+        Timber.i("viewModel created")
+    }
+
     private val _worldNewsScreenState = mutableStateOf(WorldNewsScreenState())
-    val worldNewsScreenState get() = _worldNewsScreenState
+    val worldNewsScreenState: State<WorldNewsScreenState> = _worldNewsScreenState
 
     private val _businessNewsScreenState = mutableStateOf(BusinessNewsScreenState())
     val businessNewsScreenState get() = _businessNewsScreenState
@@ -34,7 +43,7 @@ class MainViewModel(private val mainViewModelUseCases: MainViewModelUseCases) : 
                     WorldNewsScreenState(isLoadingWorldNews = true)
             }
 
-        }
+        }.launchIn(viewModelScope)
     }
 
     fun getBusinessNews() {
@@ -47,8 +56,8 @@ class MainViewModel(private val mainViewModelUseCases: MainViewModelUseCases) : 
                 is Loading -> _businessNewsScreenState.value =
                     BusinessNewsScreenState(isLoading = true)
             }
+        }.launchIn(viewModelScope)
 
-        }
     }
 
     fun getSportsNews() {
@@ -61,7 +70,7 @@ class MainViewModel(private val mainViewModelUseCases: MainViewModelUseCases) : 
                 is Loading -> _sportsNewsScreenState.value = SportsNewsScreenState(isLoading = true)
             }
 
-        }
+        }.launchIn(viewModelScope)
     }
 
     fun getHealthNews() {
@@ -74,7 +83,7 @@ class MainViewModel(private val mainViewModelUseCases: MainViewModelUseCases) : 
                 is Loading -> _healthNewsScreenState.value = HealthNewsScreenState(isLoading = true)
             }
 
-        }
+        }.launchIn(viewModelScope)
     }
 
 }
