@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.io.gazette.App
@@ -33,8 +35,16 @@ class BusinessNewsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_business_news, container, false).apply {
-            findViewById<ComposeView>(R.id.business_news_compose_view).setContent {
-                BusinessNewsContent()
+            findViewById<ComposeView>(R.id.business_news_compose_view).apply {
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnLifecycleDestroyed(
+                        viewLifecycleOwner
+                    )
+                )
+
+                setContent {
+                    BusinessNewsContent()
+                }
             }
         }
     }
@@ -43,19 +53,21 @@ class BusinessNewsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (viewModel.businessNewsScreenState.value.businessNews.isEmpty()) viewModel.getBusinessNews()
+
     }
 
     @Composable
-    fun BusinessNewsContent(){
+    fun BusinessNewsContent() {
         val state = viewModel.businessNewsScreenState.value
 
-        Box(modifier= Modifier.fillMaxSize()) {
-            if (state.isLoading){
+
+        Box(modifier = Modifier.fillMaxSize()) {
+            if (state.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
 
-            if (state.businessNews.isNotEmpty()){
-                NewsList(newsItems = state.businessNews, onItemClick = {} )
+            if (state.businessNews.isNotEmpty()) {
+                NewsList(newsItems = state.businessNews, onItemClick = {})
             }
         }
     }

@@ -12,11 +12,11 @@ import com.io.gazette.domain.models.NewsItem
 fun NewsList(
     newsItems: List<NewsItem>,
     modifier: Modifier = Modifier,
-    onItemClick: (NewsItem) -> Unit
+    onItemClick: (NewsItem) -> Unit,
 ) {
-    val listState = rememberLazyListState()
 
-    LazyColumn(modifier.fillMaxSize(), state = listState ) {
+    val listState = rememberLazyListState()
+    LazyColumn(modifier.fillMaxSize(), state = listState) {
         items(newsItems) { newsItem ->
             NewsListItem(newsItem = newsItem, onItemClick = onItemClick)
         }

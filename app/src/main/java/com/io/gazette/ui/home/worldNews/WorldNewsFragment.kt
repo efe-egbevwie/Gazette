@@ -1,6 +1,5 @@
 package com.io.gazette.ui.home.worldNews
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.io.gazette.App
@@ -34,23 +34,31 @@ class WorldNewsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_world_news, container, false).apply {
-            findViewById<ComposeView>(R.id.world_news_compose_view).setContent {
-                WorldNewsContent()
+            findViewById<ComposeView>(R.id.world_news_compose_view).apply {
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnLifecycleDestroyed(
+                        viewLifecycleOwner
+                    )
+                )
+                setContent {
+                    WorldNewsContent()
+                }
             }
         }
     }
-
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         if (viewModel.worldNewsScreenState.value.worldNews.isEmpty()) viewModel.getWorldNews()
+
     }
 
     @Composable
     fun WorldNewsContent() {
         val state = viewModel.worldNewsScreenState.value
+
 
         Box(modifier = Modifier.fillMaxSize()) {
 
@@ -59,7 +67,9 @@ class WorldNewsFragment : Fragment() {
             }
 
             if (state.worldNews.isNotEmpty()) {
-                NewsList(newsItems = state.worldNews, onItemClick = {})
+                NewsList(
+                    newsItems = state.worldNews, onItemClick = {}
+                )
             }
 
         }

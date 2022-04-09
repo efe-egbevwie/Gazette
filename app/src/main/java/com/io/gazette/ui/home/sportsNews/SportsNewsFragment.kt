@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.io.gazette.App
@@ -32,7 +33,15 @@ class SportsNewsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_sports_news, container, false).apply {
-            findViewById<ComposeView>(R.id.sports_news_compose_view).setContent { SportsNewsContent() }
+            findViewById<ComposeView>(R.id.sports_news_compose_view).apply {
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnLifecycleDestroyed(
+                        viewLifecycleOwner
+                    )
+                )
+
+                setContent { SportsNewsContent() }
+            }
         }
     }
 
@@ -46,12 +55,14 @@ class SportsNewsFragment : Fragment() {
     fun SportsNewsContent() {
         val state = viewModel.sportsNewsScreenState.value
 
+
         Box(modifier = Modifier.fillMaxSize()) {
             if (state.isLoading) CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
 
             if (state.sportsNews.isNotEmpty()) NewsList(
                 newsItems = state.sportsNews,
-                onItemClick = {})
+                onItemClick = {},
+            )
         }
     }
 
