@@ -1,7 +1,6 @@
 package com.io.gazette.ui.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +12,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,8 +20,6 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
-import com.io.gazette.R
 import com.io.gazette.domain.models.NewsItem
 
 @Preview
@@ -41,7 +37,7 @@ fun PreviewNewsListItem() {
         writer = "Efe"
     )
 
-    NewsListItem(newsItem = newsItem, onItemClick = {} )
+    NewsListItem(newsItem = newsItem, onItemClick = {})
 }
 
 
@@ -49,13 +45,13 @@ fun PreviewNewsListItem() {
 fun NewsListItem(
     newsItem: NewsItem,
     modifier: Modifier = Modifier,
-    onItemClick: (NewsItem) -> Unit
+    onItemClick: (newsUrl:String) -> Unit
 ) {
     Card(
         modifier = modifier
             .fillMaxSize()
             .padding(10.dp)
-            .clickable { onItemClick(newsItem) },
+            .clickable { onItemClick(newsItem.url) },
         border = BorderStroke(1.dp, color = MaterialTheme.colors.onSurface),
         elevation = 8.dp,
         shape = RoundedCornerShape(8.dp)

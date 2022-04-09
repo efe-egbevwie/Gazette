@@ -14,11 +14,13 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.io.gazette.App
 import com.io.gazette.MainViewModel
 import com.io.gazette.MainViewModelFactory
 import com.io.gazette.R
 import com.io.gazette.ui.components.NewsList
+import com.io.gazette.ui.home.HomeFragmentDirections
 
 
 class HealthNewsFragment : Fragment() {
@@ -66,10 +68,18 @@ class HealthNewsFragment : Fragment() {
 
             if (state.healthNews.isNotEmpty()) NewsList(
                 newsItems = state.healthNews,
-                onItemClick = {},
+                onItemClick = { newsUrl ->
+                    navigateToDetailFragment(newsUrl)
+                },
             )
 
         }
     }
+
+    private fun navigateToDetailFragment(url: String) {
+        val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(url)
+        findNavController().navigate(action)
+    }
+
 
 }

@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,11 +14,13 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.io.gazette.App
 import com.io.gazette.MainViewModel
 import com.io.gazette.MainViewModelFactory
 import com.io.gazette.R
 import com.io.gazette.ui.components.NewsList
+import com.io.gazette.ui.home.HomeFragmentDirections
 
 
 class BusinessNewsFragment : Fragment() {
@@ -67,9 +68,16 @@ class BusinessNewsFragment : Fragment() {
             }
 
             if (state.businessNews.isNotEmpty()) {
-                NewsList(newsItems = state.businessNews, onItemClick = {})
+                NewsList(newsItems = state.businessNews, onItemClick = { url ->
+                    navigateToDetailFragment(url)
+                })
             }
         }
+    }
+
+    private fun navigateToDetailFragment(url: String) {
+        val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(url)
+        findNavController().navigate(action)
     }
 
 
