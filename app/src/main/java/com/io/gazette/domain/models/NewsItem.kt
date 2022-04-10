@@ -12,5 +12,7 @@ data class NewsItem(
     val url: String,
     val photoUrl: String,
     val writer: String
-)
+){
+    fun isValid():Boolean=this.title.isNotBlank() and this.abstract.isNotBlank()
+}
 

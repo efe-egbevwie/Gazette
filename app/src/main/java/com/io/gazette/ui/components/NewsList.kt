@@ -18,7 +18,7 @@ fun NewsList(
     val listState = rememberLazyListState()
     LazyColumn(modifier.fillMaxSize(), state = listState) {
         items(newsItems) { newsItem ->
-            NewsListItem(newsItem = newsItem, onItemClick = onItemClick)
+            if (newsItem.isValid()) NewsListItem(newsItem = newsItem, onItemClick = onItemClick)
         }
     }
 }
