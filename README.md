@@ -5,20 +5,24 @@ a WebView.
 
 ## ScreenShots
 
-<table>
-    <tr>
-        <td>Home screen Light mode</td>
-        <td>Home screen Dark mode</td>
-        <td>Detail screen Light mode</td>
-        <td>Detail screen Dark mode</td>
-    </tr>
-    <tr>
-        <td><img src="screenshots/home_screen_tablet.png" width=600 height=600></td>
-        <td><img src="screenshots/home_screen_dark.jpg" width=600 height=600></td>
-        <td><img src="screenshots/news_detail_tablet.png" width=600 height=600></td>
-        <td><img src="screenshots/news_detail_dark.jpg" width=600 height=600></td>
-    </tr>
-</table>
+### Tablet Home screen day mode
+![Home Screen Light](screenshots/home_screen_tablet.png " Home scree  Light Mode")
+
+
+### Tablet Detail screen day mode
+![News detail Light](screenshots/news_detail_tablet.png "Detail screen Light")
+
+
+
+### Phone Home screen dark mode
+![Home Screen screenshot dark](screenshots/home_screen_dark.jpg "Home screen Dark") 
+
+
+
+
+### Phone Detail screen dark mode
+![News Detail Dark](screenshots/news_detail_dark.jpg "Detail screen Dark")
+
 
 
 ## Architecture
