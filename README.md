@@ -12,7 +12,6 @@ a WebView.
         <td>Detail screen Light mode</td>
         <td>Detail screen Dark mode</td>
     </tr>
-
     <tr>
         <td><img src="screenshots/home_screen_tablet.png" width=270 height=600></td>
         <td><img src="screenshots/home_screen_dark.jpg" width=270 height=600></td>
