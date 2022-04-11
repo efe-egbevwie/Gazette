@@ -6,14 +6,14 @@
         android:id="@+id/homeFragment"
         android:enabled="true"
         android:icon="@drawable/ic_home_bottom_nav"
-        app:exb_color="@color/white"
+        app:exb_color="@color/colorOnPrimary"
         android:title="@string/home_string"
         android:visible="true"/>
 
     <item
         android:id="@+id/bookmarkedFragment"
         android:enabled="true"
-        app:exb_color="@color/white"
+        app:exb_color="@color/colorOnPrimary"
         android:icon="@drawable/ic_bookmark_icon_filled"
         android:visible="true"
         android:title="@string/bookmarks_string" />

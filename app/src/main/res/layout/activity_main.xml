@@ -6,29 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-   <androidx.fragment.app.FragmentContainerView
-       android:id="@+id/nav_host_fragment_container"
-       android:tag="navHostFragment"
-       android:name="androidx.navigation.fragment.NavHostFragment"
-       android:layout_width="match_parent"
-       app:defaultNavHost="true"
-       app:navGraph="@navigation/main_nav_graph"
-       android:layout_height="0dp"
-       app:layout_constraintStart_toStartOf="parent"
-       app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintTop_toTopOf="parent"
-       app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar"/>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment_container"
+        android:tag="navHostFragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/main_nav_graph"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav_bar" />
 
-   <github.com.st235.lib_expandablebottombar.ExpandableBottomBar
-       android:id="@+id/bottom_nav_bar"
-       android:layout_width="match_parent"
-       app:exb_items="@menu/bottom_nav_menu"
-       app:exb_backgroundColor="@color/purple_500"
-       app:exb_item_horizontal_padding="64dp"
-       android:layout_height="48dp"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintBottom_toBottomOf="parent"/>
+    <github.com.st235.lib_expandablebottombar.ExpandableBottomBar
+        android:id="@+id/bottom_nav_bar"
+        android:layout_width="match_parent"
+        app:exb_items="@menu/bottom_nav_menu"
+        app:exb_backgroundColor="@color/colorPrimary"
+        app:exb_itemInactiveColor="@color/colorOnPrimary"
+        app:exb_item_horizontal_padding="64dp"
+        android:layout_height="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
