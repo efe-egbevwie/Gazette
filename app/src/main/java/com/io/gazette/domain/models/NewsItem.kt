@@ -11,7 +11,8 @@ data class NewsItem(
     val section: String,
     val url: String,
     val photoUrl: String,
-    val writer: String
+    val writer: String,
+    val publishedDate:String? = null
 ){
     fun isValid():Boolean=this.title.isNotBlank() and this.abstract.isNotBlank()
 }
