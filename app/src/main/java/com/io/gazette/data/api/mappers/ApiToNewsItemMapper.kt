@@ -3,6 +3,7 @@ package com.io.gazette.data.api.mappers
 import com.io.gazette.data.api.models.Result
 import com.io.gazette.domain.models.NewsItem
 import com.io.gazette.utils.DateTimeUtils
+import com.io.gazette.utils.DateTimeUtils.formatDateTimeStamp
 import kotlinx.datetime.Instant
 import kotlinx.datetime.toLocalDate
 import kotlinx.datetime.toLocalDateTime
@@ -13,5 +14,6 @@ fun Result.toDomainNewsItem() = NewsItem(
     url = this.url.orEmpty(),
     section = this.section.orEmpty(),
     photoUrl = this.multimedia?.find { it.url != null }?.url.orEmpty(),
-    writer = this.byline.orEmpty()
+    writer = this.byline.orEmpty(),
+    publishedDate = this.createdDate?.formatDateTimeStamp()
 )

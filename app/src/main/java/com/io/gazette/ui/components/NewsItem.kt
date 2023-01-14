@@ -72,7 +72,6 @@ fun NewsListItem(
 
             AsyncImage(
                 model = newsItem.photoUrl,
-                placeholder = painterResource(id = R.drawable.ic_web_3_0),
                 contentDescription = "News Item Image",
                 modifier = modifier
                     .fillMaxWidth()
@@ -137,7 +136,7 @@ fun NewsListItem(
                 fontSize = 12.sp,
                 textAlign = TextAlign.Start,
                 modifier = modifier
-                    .padding(start = 16.dp, end = 16.dp)
+                    .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                     .fillMaxWidth()
                     .constrainAs(publishedDate) {
                         start.linkTo(author.start)
