@@ -1,29 +1,17 @@
 package com.io.gazette.ui.home
 
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.io.gazette.App
-import com.io.gazette.MainViewModel
-import com.io.gazette.MainViewModelFactory
 import com.io.gazette.R
-import timber.log.Timber
 
 class HomeFragment : Fragment() {
-
-
-    private val mainViewModelUseCases = App.useCasesModule.mainViewModelUseCases
-
-    private val factory: MainViewModelFactory = MainViewModelFactory(mainViewModelUseCases)
-    private val viewModel: MainViewModel by activityViewModels { factory }
 
 
     private lateinit var viewPager: ViewPager2

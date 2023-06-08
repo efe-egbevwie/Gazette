@@ -1,89 +1,188 @@
 package com.io.gazette
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.io.gazette.domain.useCases.MainViewModelUseCases
-import com.io.gazette.ui.home.businessNews.BusinessNewsScreenState
-import com.io.gazette.ui.home.healthNews.HealthNewsScreenState
-import com.io.gazette.ui.home.sportsNews.SportsNewsScreenState
-import com.io.gazette.ui.home.worldNews.WorldNewsScreenState
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.io.gazette.common.OneTimeEvent
+import com.io.gazette.data.repositories.NytRepository
+import com.io.gazette.domain.models.GetDataResult
+import com.io.gazette.news.businessNews.BusinessNewsScreenState
+import com.io.gazette.news.healthNews.HealthNewsScreenState
+import com.io.gazette.news.sportsNews.SportsNewsScreenState
+import com.io.gazette.news.worldNews.WorldNewsScreenState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
-class MainViewModel(private val mainViewModelUseCases: MainViewModelUseCases) : ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(private val newsRepository: NytRepository) : ViewModel() {
 
 
     init {
         Timber.i("viewModel created")
     }
 
-    private val _worldNewsScreenState = mutableStateOf(WorldNewsScreenState())
-    val worldNewsScreenState: State<WorldNewsScreenState> = _worldNewsScreenState
+    private val _worldNewsState = MutableStateFlow(WorldNewsScreenState())
+    val worldNewsState = _worldNewsState.asStateFlow()
 
-    private val _businessNewsScreenState = mutableStateOf(BusinessNewsScreenState())
-    val businessNewsScreenState get() = _businessNewsScreenState
 
-    private val _sportsNewsScreenState = mutableStateOf(SportsNewsScreenState())
-    val sportsNewsScreenState get() = _sportsNewsScreenState
+    private val _businessNewsScreenState = MutableStateFlow(BusinessNewsScreenState())
+    val businessNewsScreenState = _businessNewsScreenState.asStateFlow()
 
-    private val _healthNewsScreenState = mutableStateOf(HealthNewsScreenState())
-    val healthNewsScreenState get() = _healthNewsScreenState
+    private val _sportsNewsScreenState = MutableStateFlow(SportsNewsScreenState())
+    val sportsNewsScreenState = _sportsNewsScreenState.asStateFlow()
+
+    private val _healthNewsScreenState = MutableStateFlow(HealthNewsScreenState())
+    val healthNewsScreenState = _healthNewsScreenState.asStateFlow()
 
     fun getWorldNews() {
-        mainViewModelUseCases.getWorldNewsUseCase().onEach { result ->
-            when (result) {
-                is Success -> _worldNewsScreenState.value =
-                    WorldNewsScreenState(worldNews = result.data)
-                is Failure -> _worldNewsScreenState.value =
-                    WorldNewsScreenState(worldNewsErrorMessage = result.errorMessage)
-                is Loading -> _worldNewsScreenState.value =
-                    WorldNewsScreenState(isLoadingWorldNews = true)
+        viewModelScope.launch {
+
+            _worldNewsState.update { currentState ->
+                currentState.copy(isLoadingWorldNews = true)
             }
 
-        }.launchIn(viewModelScope)
+            newsRepository.getWorldNews().let { result ->
+                when (result) {
+                    is GetDataResult.Success -> {
+                        _worldNewsState.update { currentState ->
+                            currentState.copy(isLoadingWorldNews = false)
+                        }
+                        result.data?.collect {
+                            _worldNewsState.update { currentState ->
+                                currentState.copy(worldNews = it)
+                            }
+                        }
+                    }
+
+                    is GetDataResult.Failure -> {
+                        _worldNewsState.update { currentState ->
+                            currentState.copy(
+                                isLoadingWorldNews = false,
+                                error = OneTimeEvent(result.exception)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     fun getBusinessNews() {
-        mainViewModelUseCases.getBusinessUseCase().onEach { result ->
-            when (result) {
-                is Success -> _businessNewsScreenState.value =
-                    BusinessNewsScreenState(businessNews = result.data)
-                is Failure -> _businessNewsScreenState.value =
-                    BusinessNewsScreenState(errorMessage = result.errorMessage)
-                is Loading -> _businessNewsScreenState.value =
-                    BusinessNewsScreenState(isLoading = true)
-            }
-        }.launchIn(viewModelScope)
+        viewModelScope.launch {
 
+            _businessNewsScreenState.update { currentState ->
+                currentState.copy(isLoading = true)
+            }
+
+            newsRepository.getBusinessNews().let { result ->
+                when (result) {
+                    is GetDataResult.Success -> {
+                        _businessNewsScreenState.update { currentState ->
+                            currentState.copy(isLoading = false)
+                        }
+                        result.data?.collect { newsFromRepo ->
+                            _businessNewsScreenState.update { currentState ->
+                                currentState.copy(businessNews = newsFromRepo)
+                            }
+                        }
+                    }
+
+                    is GetDataResult.Failure -> {
+                        _businessNewsScreenState.update { currentState ->
+                            currentState.copy(
+                                isLoading = false,
+                                error = OneTimeEvent(result.exception)
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun getSportsNews() {
-        mainViewModelUseCases.getSportsNewsUseCase().onEach { result ->
-            when (result) {
-                is Success -> _sportsNewsScreenState.value =
-                    SportsNewsScreenState(sportsNews = result.data)
-                is Failure -> _sportsNewsScreenState.value =
-                    SportsNewsScreenState(errorMessage = result.errorMessage)
-                is Loading -> _sportsNewsScreenState.value = SportsNewsScreenState(isLoading = true)
+        viewModelScope.launch {
+
+            _sportsNewsScreenState.update { currentState ->
+                currentState.copy(isLoading = true)
             }
 
-        }.launchIn(viewModelScope)
+            newsRepository.getSportsNews().let { result ->
+                when (result) {
+                    is GetDataResult.Success -> {
+                        _sportsNewsScreenState.update { currentState ->
+                            currentState.copy(isLoading = false)
+                        }
+                        result.data?.collect { newsFromRepo ->
+                            _sportsNewsScreenState.update { currentState ->
+                                currentState.copy(sportsNews = newsFromRepo)
+                            }
+                        }
+                    }
+
+                    is GetDataResult.Failure -> {
+                        _sportsNewsScreenState.update { currentState ->
+                            currentState.copy(
+                                isLoading = false,
+                                error = OneTimeEvent(result.exception)
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 
     fun getHealthNews() {
-        mainViewModelUseCases.getHealthNewsUseCase().onEach { result ->
-            when (result) {
-                is Success -> _healthNewsScreenState.value =
-                    HealthNewsScreenState(healthNews = result.data)
-                is Failure -> _healthNewsScreenState.value =
-                    HealthNewsScreenState(errorMessage = result.errorMessage)
-                is Loading -> _healthNewsScreenState.value = HealthNewsScreenState(isLoading = true)
+        viewModelScope.launch {
+
+            _healthNewsScreenState.update { currentState ->
+                currentState.copy(isLoading = true)
             }
 
-        }.launchIn(viewModelScope)
+            newsRepository.getHealthNews().let { result ->
+                when (result) {
+                    is GetDataResult.Success -> {
+                        _healthNewsScreenState.update { currentState ->
+                            currentState.copy(isLoading = false)
+                        }
+                        result.data?.collect { newsFromRepo ->
+                            _healthNewsScreenState.update { currentState ->
+                                currentState.copy(healthNews = newsFromRepo)
+                            }
+                        }
+                    }
+
+                    is GetDataResult.Failure -> {
+                        _healthNewsScreenState.update { currentState ->
+                            currentState.copy(
+                                isLoading = false,
+                                error = OneTimeEvent(result.exception)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    companion object {
+
+        fun factory(newsRepository: NytRepository): ViewModelProvider.Factory {
+            return viewModelFactory {
+                initializer {
+                    MainViewModel(newsRepository)
+                }
+            }
+        }
     }
 
 }

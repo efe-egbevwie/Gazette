@@ -1,8 +1,6 @@
 package com.io.gazette.domain.models
 
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
+import com.io.gazette.data.local.model.NewsEntity
 
 
 data class NewsItem(
@@ -12,8 +10,18 @@ data class NewsItem(
     val url: String,
     val photoUrl: String,
     val writer: String,
-    val publishedDate:String? = null
-){
-    fun isValid():Boolean=this.title.isNotBlank() and this.abstract.isNotBlank()
+    val publishedDate: String? = null
+) {
+    fun isValid(): Boolean = this.title.isNotBlank() and this.abstract.isNotBlank()
 }
+
+fun NewsItem.toNewsEntity() = NewsEntity(
+    title = this.title,
+    abstract = this.abstract,
+    section = this.section,
+    url = this.url,
+    photoUrl = this.photoUrl,
+    writer = this.writer,
+    publishedDate = this.publishedDate
+)
 

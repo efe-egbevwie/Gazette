@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.businessNews.BusinessNewsFragment">
+    tools:context=".news.businessNews.BusinessNewsFragment">
 
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/business_news_compose_view"
