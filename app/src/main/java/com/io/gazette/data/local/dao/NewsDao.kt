@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.io.gazette.data.local.model.NewsEntity
+import com.io.gazette.data.local.model.ReadingList
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -21,4 +22,12 @@ interface NewsDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAllNews(newsList: List<NewsEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun createReadingList(readingList: ReadingList)
+
+    @Query("SELECT * from reading_list")
+    fun getReadingLists(): Flow<List<ReadingList?>>
+
+
 }

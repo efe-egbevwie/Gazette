@@ -2,17 +2,21 @@ package com.io.gazette.ui.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -68,7 +72,13 @@ fun NewsListItem(
         ConstraintLayout(
             modifier = modifier.fillMaxSize()
         ) {
-            val (photo, title, author, abstract, publishedDate) = createRefs()
+            val (photo,
+                title,
+                author,
+                abstract,
+                publishedDate,
+                bookmarkIcon
+            ) = createRefs()
 
             AsyncImage(
                 model = newsItem.photoUrl,
@@ -82,7 +92,8 @@ fun NewsListItem(
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         bottom.linkTo(title.top)
-                    }
+                    },
+                placeholder = painterResource(id = R.drawable.ic_news_item)
 
             )
 
@@ -137,11 +148,24 @@ fun NewsListItem(
                 textAlign = TextAlign.Start,
                 modifier = modifier
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(0.5f)
                     .constrainAs(publishedDate) {
-                        start.linkTo(author.start)
-                        end.linkTo(parent.end)
                         top.linkTo(author.bottom)
+                        linkTo(start = author.start, end = parent.end, bias = 0F)
+                    }
+
+            )
+
+            Image(
+                painter = painterResource(id = R.drawable.ic_bookmark_icon_filled),
+                contentDescription = "Bookmark",
+                modifier = modifier
+                    .size(40.dp)
+                    .padding(10.dp)
+                    .constrainAs(bookmarkIcon) {
+                        baseline.linkTo(publishedDate.baseline)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(publishedDate.bottom)
                     }
             )
 

@@ -10,7 +10,8 @@ data class NewsItem(
     val url: String,
     val photoUrl: String,
     val writer: String,
-    val publishedDate: String? = null
+    val publishedDate: String? = null,
+    val isBookMarked:Boolean = false
 ) {
     fun isValid(): Boolean = this.title.isNotBlank() and this.abstract.isNotBlank()
 }

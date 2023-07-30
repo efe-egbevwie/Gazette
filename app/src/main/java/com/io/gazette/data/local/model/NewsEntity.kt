@@ -2,7 +2,6 @@ package com.io.gazette.data.local.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.io.gazette.domain.models.NewsItem
 
@@ -20,7 +19,7 @@ data class NewsEntity(
     val publishedDate: String? = null
 ) {
     fun toDomainNewsItem() = NewsItem(
-        title, abstract, section, url, photoUrl, writer, publishedDate
+        title, abstract, section, url, photoUrl, writer, publishedDate, isBookMarked = true
     )
 }
 

@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 3,
-    "identityHash": "b298a7d0b97325898c4465f28f7021b1",
+    "version": 4,
+    "identityHash": "f8dd3684942d8a0342b7d7d16ad5e299",
     "entities": [
       {
         "tableName": "news",
@@ -62,11 +62,11 @@
       },
       {
         "tableName": "reading_list",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`listId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `list_name` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`list_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `list_name` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "listId",
-            "columnName": "listId",
+            "columnName": "list_id",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -80,7 +80,7 @@
         "primaryKey": {
           "autoGenerate": true,
           "columnNames": [
-            "listId"
+            "list_id"
           ]
         },
         "indices": [],
@@ -90,7 +90,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b298a7d0b97325898c4465f28f7021b1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f8dd3684942d8a0342b7d7d16ad5e299')"
     ]
   }
 }
