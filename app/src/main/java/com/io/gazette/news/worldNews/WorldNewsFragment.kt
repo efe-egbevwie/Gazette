@@ -23,8 +23,8 @@ import coil.memory.MemoryCache
 import coil.request.ImageRequest
 import com.io.gazette.MainViewModel
 import com.io.gazette.R
+import com.io.gazette.common.ui.components.NewsList
 import com.io.gazette.domain.models.NewsItem
-import com.io.gazette.ui.components.NewsList
 import com.io.gazette.ui.home.HomeFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -119,8 +119,12 @@ class WorldNewsFragment : Fragment() {
             if (worldNews?.isNotEmpty() == true) {
 
                 NewsList(
-                    newsItems = worldNews, onItemClick = { newsUrl ->
+                    newsItems = worldNews,
+                    onItemClick = { newsUrl ->
                         navigateToDetailFragment(newsUrl)
+                    },
+                    onSaveStoryButtonClicked = { storyUrl ->
+                        navigateToSaveStoryDialog(storyUrl)
                     }
                 )
             }
@@ -131,6 +135,12 @@ class WorldNewsFragment : Fragment() {
 
     private fun navigateToDetailFragment(url: String) {
         val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(url)
+        findNavController().navigate(action)
+    }
+
+    private fun navigateToSaveStoryDialog(storyUrl: String) {
+        val action =
+            HomeFragmentDirections.actionHomeFragmentToAddToReadingListDialogFragment(storyUrl)
         findNavController().navigate(action)
     }
 

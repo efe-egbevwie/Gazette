@@ -18,8 +18,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.io.gazette.MainViewModel
 import com.io.gazette.R
+import com.io.gazette.common.ui.components.NewsList
 import com.io.gazette.domain.models.NewsItem
-import com.io.gazette.ui.components.NewsList
 import com.io.gazette.ui.home.HomeFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -78,9 +78,15 @@ class BusinessNewsFragment : Fragment() {
             }
 
             if (businessNews?.isNotEmpty() == true) {
-                NewsList(newsItems = businessNews, onItemClick = { url ->
-                    navigateToDetailFragment(url)
-                })
+                NewsList(
+                    newsItems = businessNews,
+                    onItemClick = { url ->
+                        navigateToDetailFragment(url)
+                    },
+                    onSaveStoryButtonClicked = { storyUrl ->
+                        navigateToSaveStoryDialog(storyUrl)
+                    }
+                )
             }
         }
     }
@@ -90,5 +96,10 @@ class BusinessNewsFragment : Fragment() {
         findNavController().navigate(action)
     }
 
+    private fun navigateToSaveStoryDialog(storyUrl: String) {
+        val action =
+            HomeFragmentDirections.actionHomeFragmentToAddToReadingListDialogFragment(storyUrl)
+        findNavController().navigate(action)
+    }
 
 }

@@ -18,8 +18,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.io.gazette.MainViewModel
 import com.io.gazette.R
+import com.io.gazette.common.ui.components.NewsList
 import com.io.gazette.domain.models.NewsItem
-import com.io.gazette.ui.components.NewsList
 import com.io.gazette.ui.home.HomeFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -77,12 +77,16 @@ class HealthNewsFragment : Fragment() {
         Box(modifier = Modifier.fillMaxSize()) {
             if (isLoading) CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
 
-            if (healthNews.isNotEmpty()) NewsList(
-                newsItems = healthNews,
-                onItemClick = { newsUrl ->
-                    navigateToDetailFragment(newsUrl)
-                },
-            )
+            if (healthNews.isNotEmpty()) {
+                NewsList(
+                    newsItems = healthNews,
+                    onItemClick = { newsUrl ->
+                        navigateToDetailFragment(newsUrl)
+                    },
+                    onSaveStoryButtonClicked = {storyUrl ->
+                        navigateToSaveStoryDialog(storyUrl) }
+                )
+            }
 
         }
     }
@@ -92,5 +96,9 @@ class HealthNewsFragment : Fragment() {
         findNavController().navigate(action)
     }
 
+    private fun navigateToSaveStoryDialog(storyUrl:String) {
+        val action = HomeFragmentDirections.actionHomeFragmentToAddToReadingListDialogFragment(storyUrl)
+        findNavController().navigate(action)
+    }
 
 }

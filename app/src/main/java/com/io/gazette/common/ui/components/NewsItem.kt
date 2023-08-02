@@ -1,9 +1,8 @@
-package com.io.gazette.ui.components
+package com.io.gazette.common.ui.components
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +15,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -49,7 +47,7 @@ fun PreviewNewsListItem() {
         publishedDate = "14/1/2023"
     )
 
-    NewsListItem(newsItem = newsItem, onItemClick = {})
+    NewsListItem(newsItem = newsItem, onItemClick = {}, onSaveStoryButtonClicked = {})
 }
 
 
@@ -57,7 +55,8 @@ fun PreviewNewsListItem() {
 fun NewsListItem(
     newsItem: NewsItem,
     modifier: Modifier = Modifier,
-    onItemClick: (newsUrl: String) -> Unit
+    onItemClick: (newsUrl: String) -> Unit,
+    onSaveStoryButtonClicked: (storyUrl:String) -> Unit
 ) {
     Card(
         modifier = modifier
@@ -167,6 +166,7 @@ fun NewsListItem(
                         end.linkTo(parent.end)
                         bottom.linkTo(publishedDate.bottom)
                     }
+                    .clickable { onSaveStoryButtonClicked.invoke(newsItem.url) }
             )
 
         }

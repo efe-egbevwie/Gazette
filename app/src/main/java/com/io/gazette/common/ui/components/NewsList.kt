@@ -1,4 +1,4 @@
-package com.io.gazette.ui.components
+package com.io.gazette.common.ui.components
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,12 +15,17 @@ fun NewsList(
     newsItems: List<NewsItem>,
     modifier: Modifier = Modifier,
     onItemClick: (String) -> Unit,
+    onSaveStoryButtonClicked: (storyUrl: String) -> Unit
 ) {
 
     val listState = rememberLazyListState()
     LazyColumn(modifier.fillMaxSize(), state = listState) {
         items(newsItems) { newsItem ->
-            if (newsItem.isValid()) NewsListItem(newsItem = newsItem, onItemClick = onItemClick)
+            if (newsItem.isValid()) NewsListItem(
+                newsItem = newsItem,
+                onItemClick = onItemClick,
+                onSaveStoryButtonClicked = onSaveStoryButtonClicked
+            )
         }
     }
 }
@@ -70,9 +75,10 @@ val sampleNewsList = listOf(
 )
 
 @Composable
-@Preview(device = "id:pixel_6a", showSystemUi = true, showBackground = true,
+@Preview(
+    device = "id:pixel_6a", showSystemUi = true, showBackground = true,
     wallpaper = Wallpapers.NONE
 )
 fun NewsListPreview() {
-    NewsList(newsItems = sampleNewsList, onItemClick = {})
+    NewsList(newsItems = sampleNewsList, onItemClick = {}, onSaveStoryButtonClicked = {})
 }

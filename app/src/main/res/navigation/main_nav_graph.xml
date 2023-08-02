@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_homeFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_addToReadingListDialogFragment"
+            app:destination="@id/addToReadingListDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/bookmarkedFragment"
@@ -35,4 +38,21 @@
             android:name="news_url"
             app:argType="string" />
     </fragment>
+    <dialog
+        android:id="@+id/addToReadingListDialogFragment"
+        android:name="com.io.gazette.readingList.AddToReadingListDialogFragment"
+        android:label="fragment_add_to_reading_list_dialog"
+        tools:layout="@layout/fragment_add_to_reading_list_dialog" >
+        <action
+            android:id="@+id/action_addToReadingListDialogFragment_to_addNewReadingListFragment"
+            app:destination="@id/addNewReadingListFragment" />
+        <argument
+            android:name="storyUrl"
+            app:argType="string" />
+    </dialog>
+    <dialog
+        android:id="@+id/addNewReadingListFragment"
+        android:name="com.io.gazette.readingList.AddNewReadingListFragment"
+        android:label="fragment_add_new_reading_list"
+        tools:layout="@layout/fragment_add_new_reading_list" />
 </navigation>
