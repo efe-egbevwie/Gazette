@@ -2,6 +2,7 @@ package com.io.gazette.readingList.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -54,13 +55,15 @@ fun ReadingListCard(
         Card(
             elevation = 4.dp,
             modifier = Modifier
-                .padding(top = 8.dp, start = 8.dp, end = 8.dp, bottom = 8.dp)
+                .padding(all = 8.dp)
                 .fillMaxWidth()
                 .height(60.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier
+                    .fillMaxSize()
             ) {
 
                 val isItemChecked = remember { mutableStateOf(readLaterList.isStoryAlreadyInList) }
@@ -78,21 +81,18 @@ fun ReadingListCard(
                         }
                     },
                     modifier = Modifier
-                        .padding(top = 8.dp, start = 8.dp)
-                        .alignByBaseline()
+                        .padding(start = 8.dp)
+
 
                 )
 
-//                Spacer(modifier = Modifier.width(20.dp))
 
                 Text(
                     modifier = Modifier
-                        .padding(end = 16.dp, top = 8.dp)
-                        .alignByBaseline(),
+                        .padding(),
                     text = readLaterList.listTitle,
-                    fontSize = 24.sp
+                    fontSize = 17.sp
                 )
-
 
 
             }
