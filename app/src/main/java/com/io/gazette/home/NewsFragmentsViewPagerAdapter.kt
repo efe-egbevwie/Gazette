@@ -1,4 +1,4 @@
-package com.io.gazette.ui.home
+package com.io.gazette.home
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter

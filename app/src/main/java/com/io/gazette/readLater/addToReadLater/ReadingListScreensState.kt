@@ -1,4 +1,4 @@
-package com.io.gazette.readingList
+package com.io.gazette.readLater.addToReadLater
 
 import com.io.gazette.domain.models.ReadLaterList
 

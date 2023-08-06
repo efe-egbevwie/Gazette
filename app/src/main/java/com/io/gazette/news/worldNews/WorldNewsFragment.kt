@@ -25,7 +25,7 @@ import com.io.gazette.MainViewModel
 import com.io.gazette.R
 import com.io.gazette.common.ui.components.NewsList
 import com.io.gazette.domain.models.NewsItem
-import com.io.gazette.ui.home.HomeFragmentDirections
+import com.io.gazette.home.HomeFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

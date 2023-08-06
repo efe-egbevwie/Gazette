@@ -1,4 +1,4 @@
-package com.io.gazette.readingList
+package com.io.gazette.readLater.addToReadLater
 
 sealed class ReadLaterListScreenEvent {
     object CreateNewReadLaterList : ReadLaterListScreenEvent()

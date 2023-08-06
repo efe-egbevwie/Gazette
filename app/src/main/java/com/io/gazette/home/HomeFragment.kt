@@ -1,4 +1,4 @@
-package com.io.gazette.ui.home
+package com.io.gazette.home
 
 
 import android.os.Bundle

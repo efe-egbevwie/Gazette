@@ -11,7 +11,7 @@
         android:visible="true"/>
 
     <item
-        android:id="@+id/bookmarkedFragment"
+        android:id="@+id/readLaterCollectionsFragment"
         android:enabled="true"
         app:exb_color="@color/colorOnPrimary"
         android:icon="@drawable/ic_bookmark_icon_filled"

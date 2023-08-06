@@ -1,4 +1,4 @@
-package com.io.gazette.readingList
+package com.io.gazette.readLater.addToReadLater
 
 
 import androidx.lifecycle.ViewModel
@@ -13,7 +13,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class ReadingListViewModel @Inject constructor(private val readingListRepository: ReadingListRepository) :
+class AddToReadLaterViewModel @Inject constructor(private val readingListRepository: ReadingListRepository) :
     ViewModel() {
 
 
@@ -29,6 +29,14 @@ class ReadingListViewModel @Inject constructor(private val readingListRepository
     val addToReadingListScreenState = _addToReadingListScreenState.asStateFlow()
 
 
+    init {
+        viewModelScope.launch {
+            val readLaterLists = readingListRepository.getReadLaterListsAndInfo().collect{
+                Timber.i("read later lists: $it")
+            }
+        }
+
+    }
     fun onEvent(event: ReadLaterListScreenEvent) {
         when (event) {
             is ReadLaterListScreenEvent.CreateNewReadLaterList -> createNewReadingList()

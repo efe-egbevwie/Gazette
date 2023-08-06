@@ -1,4 +1,4 @@
-package com.io.gazette.readingList
+package com.io.gazette.readLater.addToReadLater
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -28,14 +28,14 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.io.gazette.R
 import com.io.gazette.domain.models.ReadLaterList
-import com.io.gazette.readingList.composables.ReadingList
+import com.io.gazette.readLater.composables.ReadingList
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
 class AddToReadingListDialogFragment : BottomSheetDialogFragment() {
 
-    private val viewModel by viewModels<ReadingListViewModel>()
+    private val viewModel by viewModels<AddToReadLaterViewModel>()
     private val args by navArgs<AddToReadingListDialogFragmentArgs>()
 
     override fun onCreateView(

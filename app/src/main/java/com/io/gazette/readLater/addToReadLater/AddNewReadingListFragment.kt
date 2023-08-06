@@ -1,4 +1,4 @@
-package com.io.gazette.readingList
+package com.io.gazette.readLater.addToReadLater
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,7 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class AddNewReadingListFragment : BottomSheetDialogFragment() {
 
-    private val viewModel by viewModels<ReadingListViewModel>()
+    private val viewModel by viewModels<AddToReadLaterViewModel>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

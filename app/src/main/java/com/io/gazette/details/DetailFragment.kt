@@ -1,4 +1,4 @@
-package com.io.gazette.ui.details
+package com.io.gazette.details
 
 import android.os.Bundle
 import android.view.LayoutInflater

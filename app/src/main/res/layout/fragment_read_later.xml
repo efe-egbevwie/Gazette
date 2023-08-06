@@ -3,12 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.bookmarks.BookmarksFragment">
+    tools:context=".readLater.viewReadLater.ReadLaterCollectionsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.compose.ui.platform.ComposeView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello Bookmarks" />
+        android:id="@+id/read_later_collections_compose_view"
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

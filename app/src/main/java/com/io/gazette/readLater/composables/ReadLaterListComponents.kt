@@ -1,4 +1,4 @@
-package com.io.gazette.readingList.composables
+package com.io.gazette.readLater.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

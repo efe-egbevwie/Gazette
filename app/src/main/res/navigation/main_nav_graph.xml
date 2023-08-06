@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.io.gazette.ui.home.HomeFragment"
+        android:name="com.io.gazette.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_bookmarksFragment"
-            app:destination="@id/bookmarkedFragment" />
+            app:destination="@id/readLaterCollectionsFragment" />
         <action
             android:id="@+id/action_homeFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
@@ -21,17 +21,17 @@
             app:destination="@id/addToReadingListDialogFragment" />
     </fragment>
     <fragment
-        android:id="@+id/bookmarkedFragment"
-        android:name="com.io.gazette.ui.bookmarks.BookmarksFragment"
+        android:id="@+id/readLaterCollectionsFragment"
+        android:name="com.io.gazette.readLater.viewReadLater.ReadLaterCollectionsFragment"
         android:label="fragment_bookmarks"
-        tools:layout="@layout/fragment_bookmarks" >
+        tools:layout="@layout/fragment_read_later" >
         <action
-            android:id="@+id/action_bookmarksFragment_to_detailFragment"
+            android:id="@+id/action_readLaterCollectionsFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.io.gazette.ui.details.DetailFragment"
+        android:name="com.io.gazette.details.DetailFragment"
         android:label="fragment_detail"
         tools:layout="@layout/fragment_detail" >
         <argument
@@ -40,7 +40,7 @@
     </fragment>
     <dialog
         android:id="@+id/addToReadingListDialogFragment"
-        android:name="com.io.gazette.readingList.AddToReadingListDialogFragment"
+        android:name="com.io.gazette.readLater.addToReadLater.AddToReadingListDialogFragment"
         android:label="fragment_add_to_reading_list_dialog"
         tools:layout="@layout/fragment_add_to_reading_list_dialog" >
         <action
@@ -52,7 +52,7 @@
     </dialog>
     <dialog
         android:id="@+id/addNewReadingListFragment"
-        android:name="com.io.gazette.readingList.AddNewReadingListFragment"
+        android:name="com.io.gazette.readLater.addToReadLater.AddNewReadingListFragment"
         android:label="fragment_add_new_reading_list"
         tools:layout="@layout/fragment_add_new_reading_list" />
 </navigation>
