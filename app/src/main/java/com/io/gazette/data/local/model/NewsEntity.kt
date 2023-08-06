@@ -19,7 +19,7 @@ data class NewsEntity(
     val publishedDate: String? = null
 ) {
     fun toDomainNewsItem() = NewsItem(
-        title, abstract, section, url, photoUrl, writer, publishedDate, isBookMarked = true
+        title, abstract, section, url, photoUrl, writer, publishedDate
     )
 }
 

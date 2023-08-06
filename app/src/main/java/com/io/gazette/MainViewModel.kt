@@ -55,6 +55,7 @@ class MainViewModel @Inject constructor(private val newsRepository: NytRepositor
                             currentState.copy(isLoadingWorldNews = false)
                         }
                         result.data?.collect {
+                            Timber.i("the world news: $it")
                             _worldNewsState.update { currentState ->
                                 currentState.copy(worldNews = it)
                             }

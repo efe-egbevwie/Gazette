@@ -7,6 +7,7 @@ import androidx.room.Query
 import com.io.gazette.data.local.model.NewsEntity
 import com.io.gazette.data.local.model.ReadLaterCollectionEntity
 import com.io.gazette.data.local.model.ReadLaterStoryEntity
+import com.io.gazette.domain.models.NewsItem
 import com.io.gazette.domain.models.ReadLaterCollection
 import kotlinx.coroutines.flow.Flow
 
@@ -15,6 +16,9 @@ interface NewsDao {
 
     @Query("SELECT * FROM news")
     fun getAllNews(): Flow<List<NewsEntity>>
+
+    @Query("SELECT title, abstract, section, url, writer, published_date, photo_url AS photoUrl,  read_later_stories.read_later_collection_id as readLaterCollectionId FROM news  LEFT JOIN read_later_stories on news.url = read_later_stories.story_url WHERE news.section = :section  GROUP BY url")
+    fun getNewsAndBookmarkCountBySection(section: String):Flow<List<NewsItem>>
 
     @Query("SELECT * FROM news where section=:section")
     fun getNewsBySection(section: String): Flow<List<NewsEntity>>

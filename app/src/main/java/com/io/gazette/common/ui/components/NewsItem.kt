@@ -155,8 +155,13 @@ fun NewsListItem(
 
             )
 
+            val imageResource = if (newsItem.isSavedToAnyCollection()) {
+                painterResource(id = R.drawable.ic_bookmark_icon_filled)
+            }else{
+                painterResource(id = R.drawable.ic_bookmark_icon)
+            }
             Image(
-                painter = painterResource(id = R.drawable.ic_bookmark_icon_filled),
+                painter = imageResource,
                 contentDescription = "Bookmark",
                 modifier = modifier
                     .size(40.dp)

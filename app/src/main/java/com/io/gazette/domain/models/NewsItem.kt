@@ -11,9 +11,11 @@ data class NewsItem(
     val photoUrl: String,
     val writer: String,
     val publishedDate: String? = null,
-    val isBookMarked:Boolean = false
+    val readLaterCollectionId: Int? = null
 ) {
     fun isValid(): Boolean = this.title.isNotBlank() and this.abstract.isNotBlank()
+
+    fun  isSavedToAnyCollection():Boolean = this.readLaterCollectionId != null
 }
 
 fun NewsItem.toNewsEntity() = NewsEntity(

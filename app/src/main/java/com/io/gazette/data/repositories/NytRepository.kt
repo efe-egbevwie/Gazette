@@ -73,11 +73,7 @@ class NytRepository @Inject constructor(
 
 
     private fun getNewsFromDb(section: String): Flow<List<NewsItem>> {
-        return newsDao.getNewsBySection(section).map { newsListFromDb ->
-            newsListFromDb.map { newsItem ->
-                newsItem.toDomainNewsItem()
-            }
-        }
+        return newsDao.getNewsAndBookmarkCountBySection(section)
     }
 
     private suspend fun getNewsFromApi(section: NewsSection) {
