@@ -3,7 +3,7 @@ package com.io.gazette.readLater.addToReadLater
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.io.gazette.data.repositories.ReadingListRepository
+import com.io.gazette.data.repositories.ReadLaterListRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,43 +13,43 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class AddToReadLaterViewModel @Inject constructor(private val readingListRepository: ReadingListRepository) :
+class AddToReadLaterViewModel @Inject constructor(private val readLaterListRepository: ReadLaterListRepository) :
     ViewModel() {
 
 
     private val _createNewReadingListScreenState =
-        MutableStateFlow(CreateNewReadingListScreensState())
+        MutableStateFlow(CreateNewReadLaterCollectionScreenState())
 
     val createNewReadingListScreensState =
         _createNewReadingListScreenState.asStateFlow()
 
     private val _addToReadingListScreenState =
-        MutableStateFlow(AddToReadingListScreenState())
+        MutableStateFlow(AddToReadLaterCollectionScreenState())
 
-    val addToReadingListScreenState = _addToReadingListScreenState.asStateFlow()
+    val addToReadLaterCollectionScreenState = _addToReadingListScreenState.asStateFlow()
 
 
     init {
         viewModelScope.launch {
-            val readLaterLists = readingListRepository.getReadLaterListsAndInfo().collect{
+            val readLaterLists = readLaterListRepository.getReadLaterCollectionsAndInfo().collect{
                 Timber.i("read later lists: $it")
             }
         }
 
     }
-    fun onEvent(event: ReadLaterListScreenEvent) {
+    fun onEvent(event: ReadLaterCollectionScreenEvent) {
         when (event) {
-            is ReadLaterListScreenEvent.CreateNewReadLaterList -> createNewReadingList()
-            is ReadLaterListScreenEvent.NewReadLaterListTitleChanged -> updateNewReadingListTitle(
+            is ReadLaterCollectionScreenEvent.CreateNewReadLaterList -> createNewReadingList()
+            is ReadLaterCollectionScreenEvent.NewReadLaterListTitleChanged -> updateNewReadingListTitle(
                 newListTitle = event.newListTitle
             )
 
-            is ReadLaterListScreenEvent.GetUserReaLaterLists -> getUserReadingLists()
-            is ReadLaterListScreenEvent.SelectReadLaterListForSavingStory -> addReadLaterListForSavingStory(
+            is ReadLaterCollectionScreenEvent.GetUserReaLaterLists -> getUserReadingLists()
+            is ReadLaterCollectionScreenEvent.SelectReadLaterListForSavingStory -> addReadLaterListForSavingStory(
                 listId = event.listId
             )
 
-            is ReadLaterListScreenEvent.AddStoryToReadLaterLists ->
+            is ReadLaterCollectionScreenEvent.AddStoryToReadLaterLists ->
                 addStoryToReadingLists(storyUrl = event.storyUrl)
         }
     }
@@ -63,17 +63,17 @@ class AddToReadLaterViewModel @Inject constructor(private val readingListReposit
 
     private fun createNewReadingList() = viewModelScope.launch {
         val listTitle = _createNewReadingListScreenState.value.listTitle!!
-        readingListRepository.addNewReadingList(listTitle)
+        readLaterListRepository.addNewReadLaterCollection(listTitle)
     }
 
 
     private fun getUserReadingLists() {
         viewModelScope.launch {
-            readingListRepository.getReadLaterLists().collect { userList ->
+            readLaterListRepository.getReadLaterCollections().collect { userList ->
                 Timber.i("read later list: $userList")
                 _addToReadingListScreenState.update { currentState ->
                     currentState.copy(
-                        userReadingLists = userList
+                        userReadLaterCollections = userList
                     )
                 }
             }
@@ -81,16 +81,16 @@ class AddToReadLaterViewModel @Inject constructor(private val readingListReposit
     }
 
     private fun addReadLaterListForSavingStory(listId: Int) {
-        _addToReadingListScreenState.value.selectedListIds.add(listId)
+        _addToReadingListScreenState.value.selectedCollectionIds.add(listId)
     }
 
     private fun addStoryToReadingLists(storyUrl: String) {
-        val readLaterListsToSaveStory = _addToReadingListScreenState.value.selectedListIds
+        val readLaterListsToSaveStory = _addToReadingListScreenState.value.selectedCollectionIds
 
         if (readLaterListsToSaveStory.isEmpty()) return
 
         viewModelScope.launch {
-            readingListRepository.saveStoryToReadingLists(storyUrl, readLaterListsToSaveStory)
+            readLaterListRepository.saveStoryToReadLaterCollections(storyUrl, readLaterListsToSaveStory)
         }
     }
 }

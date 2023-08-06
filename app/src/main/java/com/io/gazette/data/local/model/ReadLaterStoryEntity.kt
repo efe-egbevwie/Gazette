@@ -6,12 +6,12 @@ import androidx.room.ForeignKey
 
 @Entity(
     tableName = "read_later_stories",
-    primaryKeys = ["story_url", "read_later_list_id"],
+    primaryKeys = ["story_url", "read_later_collection_id"],
     foreignKeys = [
         ForeignKey(
-            entity = ReadLaterListEntity::class,
-            parentColumns = ["list_id"],
-            childColumns = ["read_later_list_id"],
+            entity = ReadLaterCollectionEntity::class,
+            parentColumns = ["collection_id"],
+            childColumns = ["read_later_collection_id"],
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         )
@@ -20,6 +20,6 @@ import androidx.room.ForeignKey
 data class ReadLaterStoryEntity(
     @ColumnInfo("story_url")
     val storyUrl: String,
-    @ColumnInfo("read_later_list_id")
-    val readLaterListId: Int
+    @ColumnInfo("read_later_collection_id")
+    val readLaterCollectionId: Int
 )

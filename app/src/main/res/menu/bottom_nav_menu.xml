@@ -16,5 +16,5 @@
         app:exb_color="@color/colorOnPrimary"
         android:icon="@drawable/ic_bookmark_icon_filled"
         android:visible="true"
-        android:title="@string/bookmarks_string" />
+        android:title="@string/read_later_string" />
 </menu>

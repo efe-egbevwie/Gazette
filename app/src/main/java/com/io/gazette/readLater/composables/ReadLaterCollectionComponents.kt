@@ -23,19 +23,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.io.gazette.R
-import com.io.gazette.domain.models.ReadLaterList
+import com.io.gazette.domain.models.ReadLaterCollection
 import timber.log.Timber
 
 @Composable
-fun ReadingList(
-    readLaterList: List<ReadLaterList>,
+fun AddToReadLaterList(
+    readLaterList: List<ReadLaterCollection>,
     modifier: Modifier = Modifier,
     onItemChecked: (readingListId: Int) -> Unit,
     onItemUnchecked: (readingListId: Int) -> Unit
 ) {
     LazyColumn(modifier) {
         items(readLaterList) { listItem ->
-            ReadingListCard(
+            AddToReadLaterItem(
                 onItemChecked = onItemChecked,
                 onItemUnchecked = onItemUnchecked,
                 readLaterList = listItem
@@ -46,10 +46,10 @@ fun ReadingList(
 
 
 @Composable
-fun ReadingListCard(
+fun AddToReadLaterItem(
     onItemChecked: (readingListId: Int) -> Unit,
     onItemUnchecked: (readingListId: Int) -> Unit,
-    readLaterList: ReadLaterList
+    readLaterList: ReadLaterCollection
 ) {
     Surface {
         Card(
@@ -66,7 +66,7 @@ fun ReadingListCard(
                     .fillMaxSize()
             ) {
 
-                val isItemChecked = remember { mutableStateOf(readLaterList.isStoryAlreadyInList) }
+                val isItemChecked = remember { mutableStateOf(false) }
 
                 Checkbox(
                     colors = CheckboxDefaults.colors(checkedColor = colorResource(id = R.color.colorPrimary)),
@@ -75,9 +75,9 @@ fun ReadingListCard(
                         Timber.i("item checked: $isChecked")
                         isItemChecked.value = isChecked
                         if (isChecked) {
-                            onItemChecked.invoke(readLaterList.listId)
+                            onItemChecked.invoke(readLaterList.collectionId)
                         } else {
-                            onItemUnchecked.invoke(readLaterList.listId)
+                            onItemUnchecked.invoke(readLaterList.collectionId)
                         }
                     },
                     modifier = Modifier
@@ -90,7 +90,7 @@ fun ReadingListCard(
                 Text(
                     modifier = Modifier
                         .padding(),
-                    text = readLaterList.listTitle,
+                    text = readLaterList.collectionTitle,
                     fontSize = 17.sp
                 )
 
@@ -104,16 +104,16 @@ fun ReadingListCard(
 @Preview(device = "id:pixel_6a", showSystemUi = true, showBackground = true)
 fun ReadingListPreView() {
     val readLaterList = listOf(
-        ReadLaterList(listId = 1, listTitle = "Medical Research", isStoryAlreadyInList = true),
-        ReadLaterList(listId = 2, listTitle = "Tech Research", isStoryAlreadyInList = false),
-        ReadLaterList(listId = 3, listTitle = "Music", isStoryAlreadyInList = true),
-        ReadLaterList(listId = 4, listTitle = "Business", isStoryAlreadyInList = true),
-        ReadLaterList(listId = 5, listTitle = "Health", isStoryAlreadyInList = false),
-        ReadLaterList(listId = 6, listTitle = "Courses", isStoryAlreadyInList = true)
+        ReadLaterCollection(collectionId = 1, collectionTitle = "Medical Research"),
+        ReadLaterCollection(collectionId = 2, collectionTitle = "Tech Research"),
+        ReadLaterCollection(collectionId = 3, collectionTitle = "Music"),
+        ReadLaterCollection(collectionId = 4, collectionTitle = "Business"),
+        ReadLaterCollection(collectionId = 5, collectionTitle = "Health"),
+        ReadLaterCollection(collectionId = 6, collectionTitle = "Courses")
 
     )
 
-    ReadingList(
+    AddToReadLaterList(
         readLaterList = readLaterList,
         onItemChecked = {},
         onItemUnchecked = {}
@@ -122,14 +122,14 @@ fun ReadingListPreView() {
 
 @Composable
 @Preview
-fun ReadingListItemPreview() {
-    ReadingListCard(
+fun ReadLaterListItemPreview() {
+    AddToReadLaterItem(
         onItemChecked = {
             Timber.i("selected id is $it")
         },
         onItemUnchecked = {
             Timber.i("unselected id is $it")
         },
-        readLaterList = ReadLaterList(listId = 1, listTitle = "Medical Research")
+        readLaterList = ReadLaterCollection(collectionId = 1, collectionTitle = "Medical Research")
     )
 }

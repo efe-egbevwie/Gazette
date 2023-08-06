@@ -105,28 +105,28 @@ class ReadLaterCollectionsFragment : Fragment() {
 
         val previewReadLaterCollections = listOf(
             ReadLaterCollection(
-                listName = "Medical Research",
-                listId = 3,
+                collectionTitle = "Medical Research",
+                collectionId = 3,
                 storyCount = 7
             ),
             ReadLaterCollection(
-                listName = "Music",
-                listId = 4,
+                collectionTitle = "Music",
+                collectionId = 4,
                 storyCount = 1
             ),
             ReadLaterCollection(
-                listName = "BasketBall",
-                listId = 5,
+                collectionTitle = "BasketBall",
+                collectionId = 5,
                 storyCount = 20
             ),
             ReadLaterCollection(
-                listName = "Health",
-                listId = 6,
+                collectionTitle = "Health",
+                collectionId = 6,
                 storyCount = 9
             ),
             ReadLaterCollection(
-                listName = "Javascript",
-                listId = 1,
+                collectionTitle = "Javascript",
+                collectionId = 1,
                 storyCount = 23
             )
         )

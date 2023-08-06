@@ -57,13 +57,13 @@ class AddNewReadingListFragment : BottomSheetDialogFragment() {
                     CreateNewReadingListScreenContent(
                         onReadingListTitleChanged = { newTitle ->
                             viewModel.onEvent(
-                                ReadLaterListScreenEvent.NewReadLaterListTitleChanged(
+                                ReadLaterCollectionScreenEvent.NewReadLaterListTitleChanged(
                                     newTitle
                                 )
                             )
                         },
                         onCreateListButtonClicked = {
-                            viewModel.onEvent(ReadLaterListScreenEvent.CreateNewReadLaterList)
+                            viewModel.onEvent(ReadLaterCollectionScreenEvent.CreateNewReadLaterList)
                             closeFragment()
                         },
                         onCloseScreenButtonClicked = {

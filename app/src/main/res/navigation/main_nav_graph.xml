@@ -40,19 +40,19 @@
     </fragment>
     <dialog
         android:id="@+id/addToReadingListDialogFragment"
-        android:name="com.io.gazette.readLater.addToReadLater.AddToReadingListDialogFragment"
+        android:name="com.io.gazette.readLater.addToReadLater.AddToReadLaterCollectionDialogFragment"
         android:label="fragment_add_to_reading_list_dialog"
         tools:layout="@layout/fragment_add_to_reading_list_dialog" >
         <action
-            android:id="@+id/action_addToReadingListDialogFragment_to_addNewReadingListFragment"
-            app:destination="@id/addNewReadingListFragment" />
+            android:id="@+id/action_addToReadLaterDialogFragment_to_addNewReadLaterCollectionFragment"
+            app:destination="@id/addNewReadLaterCollectionFragment" />
         <argument
             android:name="storyUrl"
             app:argType="string" />
     </dialog>
     <dialog
-        android:id="@+id/addNewReadingListFragment"
+        android:id="@+id/addNewReadLaterCollectionFragment"
         android:name="com.io.gazette.readLater.addToReadLater.AddNewReadingListFragment"
-        android:label="fragment_add_new_reading_list"
+        android:label="fragment_add_new_read_later_collection"
         tools:layout="@layout/fragment_add_new_reading_list" />
 </navigation>

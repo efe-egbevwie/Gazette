@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".readLater.addToReadLater.AddToReadingListDialogFragment">
+    tools:context=".readLater.addToReadLater.AddToReadLaterCollectionDialogFragment">
 
     <androidx.compose.ui.platform.ComposeView
         android:id="@+id/reading_list_dialog_compose_view"

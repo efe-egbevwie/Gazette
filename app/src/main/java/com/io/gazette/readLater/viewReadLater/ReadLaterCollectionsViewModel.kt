@@ -2,7 +2,7 @@ package com.io.gazette.readLater.viewReadLater
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.io.gazette.data.repositories.ReadingListRepository
+import com.io.gazette.data.repositories.ReadLaterListRepository
 import com.io.gazette.domain.models.ReadLaterCollection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ReadLaterCollectionsViewModel @Inject constructor(private val readLaterRepository: ReadingListRepository) :
+class ReadLaterCollectionsViewModel @Inject constructor(private val readLaterRepository: ReadLaterListRepository) :
     ViewModel() {
 
     private val _state = MutableStateFlow(ReadLaterCollectionsScreenState())
@@ -29,7 +29,7 @@ class ReadLaterCollectionsViewModel @Inject constructor(private val readLaterRep
     private fun getAllReadLaterCollections() {
         viewModelScope.launch {
             updateScreenState(isLoading = true)
-            readLaterRepository.getReadLaterListsAndInfo().collect { collections ->
+            readLaterRepository.getReadLaterCollectionsAndInfo().collect { collections ->
                 updateScreenState(isLoading = false, readLaterCollections = collections)
             }
         }

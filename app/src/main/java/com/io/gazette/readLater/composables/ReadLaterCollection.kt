@@ -42,7 +42,7 @@ fun ReadLaterCollectionItem(
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                onItemClicked.invoke(readLaterCollection.listId)
+                onItemClicked.invoke(readLaterCollection.collectionId)
             },
         border = BorderStroke(width = 2.dp, color = colorResource(id = R.color.colorPrimary)),
         elevation = 20.dp,
@@ -56,7 +56,7 @@ fun ReadLaterCollectionItem(
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = readLaterCollection.listName,
+                    text = readLaterCollection.collectionTitle,
                     fontWeight = FontWeight.Bold,
                     fontSize = 23.sp,
                     modifier = Modifier.weight(10f)
@@ -64,7 +64,7 @@ fun ReadLaterCollectionItem(
 
 
                 IconButton(
-                    onClick = { onDeleteCollectionClicked.invoke(readLaterCollection.listId) },
+                    onClick = { onDeleteCollectionClicked.invoke(readLaterCollection.collectionId) },
                     modifier = Modifier.weight(1f)
                         .padding(0.dp)
                 ) {
@@ -99,8 +99,8 @@ fun ReadLaterCollectionsList(
         items(readLaterCollections) { collection ->
             ReadLaterCollectionItem(
                 readLaterCollection = collection,
-                onItemClicked = { onCollectionItemClicked.invoke(collection.listId) },
-                onDeleteCollectionClicked = { onDeleteCollectionClicked.invoke(collection.listId) }
+                onItemClicked = { onCollectionItemClicked.invoke(collection.collectionId) },
+                onDeleteCollectionClicked = { onDeleteCollectionClicked.invoke(collection.collectionId) }
             )
 
         }
@@ -114,8 +114,8 @@ fun ReadLaterCollectionsList(
 fun ReadLaterCollectionItemPreview() {
     ReadLaterCollectionItem(
         readLaterCollection = ReadLaterCollection(
-            listName = "Medical Research",
-            listId = 3,
+            collectionTitle = "Medical Research",
+            collectionId = 3,
             storyCount = 7
         ),
         onItemClicked = {},
@@ -129,28 +129,28 @@ fun ReadLaterCollectionItemPreview() {
 fun ReadLaterCollectionsListPreview() {
     val previewReadLaterCollections = listOf(
         ReadLaterCollection(
-            listName = "Medical Research",
-            listId = 3,
+            collectionTitle = "Medical Research",
+            collectionId = 3,
             storyCount = 7
         ),
         ReadLaterCollection(
-            listName = "Music",
-            listId = 4,
+            collectionTitle = "Music",
+            collectionId = 4,
             storyCount = 1
         ),
         ReadLaterCollection(
-            listName = "BasketBall",
-            listId = 5,
+            collectionTitle = "BasketBall",
+            collectionId = 5,
             storyCount = 20
         ),
         ReadLaterCollection(
-            listName = "Health",
-            listId = 6,
+            collectionTitle = "Health",
+            collectionId = 6,
             storyCount = 9
         ),
         ReadLaterCollection(
-            listName = "Javascript",
-            listId = 1,
+            collectionTitle = "Javascript",
+            collectionId = 1,
             storyCount = 23
         )
     )

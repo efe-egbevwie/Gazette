@@ -27,16 +27,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.io.gazette.R
-import com.io.gazette.domain.models.ReadLaterList
-import com.io.gazette.readLater.composables.ReadingList
+import com.io.gazette.domain.models.ReadLaterCollection
+import com.io.gazette.readLater.composables.AddToReadLaterList
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class AddToReadingListDialogFragment : BottomSheetDialogFragment() {
+class AddToReadLaterCollectionDialogFragment : BottomSheetDialogFragment() {
 
     private val viewModel by viewModels<AddToReadLaterViewModel>()
-    private val args by navArgs<AddToReadingListDialogFragmentArgs>()
+    private val args by navArgs<AddToReadLaterCollectionDialogFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -67,26 +67,30 @@ class AddToReadingListDialogFragment : BottomSheetDialogFragment() {
     fun AddToReadingListDialog() {
 
         LaunchedEffect(key1 = 1) {
-            viewModel.onEvent(ReadLaterListScreenEvent.GetUserReaLaterLists)
+            viewModel.onEvent(ReadLaterCollectionScreenEvent.GetUserReaLaterLists)
         }
 
         val readingList =
-            viewModel.addToReadingListScreenState.collectAsState()
+            viewModel.addToReadLaterCollectionScreenState.collectAsState()
 
 
-        AddStoryToReadLaterListDialog(
+        AddStoryToReadLaterCollectionDialog(
             storyUrl = args.storyUrl,
-            readLaterList = readingList.value.userReadingLists,
+            readLaterList = readingList.value.userReadLaterCollections,
             onReadLaterListItemChecked = { readLaterListId ->
-                viewModel.onEvent(ReadLaterListScreenEvent.SelectReadLaterListForSavingStory(listId = readLaterListId))
+                viewModel.onEvent(
+                    ReadLaterCollectionScreenEvent.SelectReadLaterListForSavingStory(
+                        listId = readLaterListId
+                    )
+                )
             },
             onReadLaterListItemUnchecked = {},
             onCreateNewReadingListClicked = {
-                navigateToAddNewReadingListDialog()
+                navigateToAddNewReadLaterCollectionDialog()
             },
             onDoneButtonClicked = { storyUrl ->
                 viewModel.onEvent(
-                    ReadLaterListScreenEvent.AddStoryToReadLaterLists(
+                    ReadLaterCollectionScreenEvent.AddStoryToReadLaterLists(
                         storyUrl = storyUrl
                     )
                 )
@@ -97,9 +101,9 @@ class AddToReadingListDialogFragment : BottomSheetDialogFragment() {
     }
 
     @Composable
-    fun AddStoryToReadLaterListDialog(
+    fun AddStoryToReadLaterCollectionDialog(
         storyUrl: String,
-        readLaterList: List<ReadLaterList>,
+        readLaterList: List<ReadLaterCollection>,
         onReadLaterListItemChecked: (readLaterListId: Int) -> Unit,
         onReadLaterListItemUnchecked: (readLaterListId: Int) -> Unit,
         onCreateNewReadingListClicked: () -> Unit,
@@ -149,7 +153,7 @@ class AddToReadingListDialogFragment : BottomSheetDialogFragment() {
 
 
                 if (readLaterList.isNotEmpty()) {
-                    ReadingList(readLaterList = readLaterList,
+                    AddToReadLaterList(readLaterList = readLaterList,
                         onItemChecked = { readLaterListId ->
                             onReadLaterListItemChecked.invoke(readLaterListId)
                         },
@@ -168,19 +172,19 @@ class AddToReadingListDialogFragment : BottomSheetDialogFragment() {
 
     @Composable
     @Preview(device = "id:pixel_6_pro", showSystemUi = true, showBackground = true)
-    fun AddToReadingListDialogPreview() {
+    fun AddToReadLaterCollectionDialogPreview() {
 
         val readLaterList = listOf(
-            ReadLaterList(listId = 1, listTitle = "Medical Research", isStoryAlreadyInList = true),
-            ReadLaterList(listId = 2, listTitle = "Tech Research", isStoryAlreadyInList = false),
-            ReadLaterList(listId = 3, listTitle = "Music", isStoryAlreadyInList = true),
-            ReadLaterList(listId = 4, listTitle = "Business", isStoryAlreadyInList = true),
-            ReadLaterList(listId = 5, listTitle = "Health", isStoryAlreadyInList = false),
-            ReadLaterList(listId = 6, listTitle = "Courses", isStoryAlreadyInList = true)
+            ReadLaterCollection(collectionId = 1, collectionTitle = "Medical Research"),
+            ReadLaterCollection(collectionId = 2, collectionTitle = "Tech Research"),
+            ReadLaterCollection(collectionId = 3, collectionTitle = "Music"),
+            ReadLaterCollection(collectionId = 4, collectionTitle = "Business"),
+            ReadLaterCollection(collectionId = 5, collectionTitle = "Health"),
+            ReadLaterCollection(collectionId = 6, collectionTitle = "Courses")
 
         )
 
-        AddStoryToReadLaterListDialog(
+        AddStoryToReadLaterCollectionDialog(
             storyUrl = "",
             readLaterList,
             onReadLaterListItemChecked = { readLaterListId ->
@@ -200,9 +204,9 @@ class AddToReadingListDialogFragment : BottomSheetDialogFragment() {
     }
 
 
-    private fun navigateToAddNewReadingListDialog() {
+    private fun navigateToAddNewReadLaterCollectionDialog() {
         val action =
-            AddToReadingListDialogFragmentDirections.actionAddToReadingListDialogFragmentToAddNewReadingListFragment()
+            AddToReadLaterCollectionDialogFragmentDirections.actionAddToReadLaterDialogFragmentToAddNewReadLaterCollectionFragment()
         findNavController().navigate(action)
     }
 

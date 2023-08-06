@@ -1,7 +1,7 @@
 package com.io.gazette.domain.models
 
 data class ReadLaterCollection(
-    val listName: String,
-    val listId: Int,
-    val storyCount: Int
+    val collectionTitle: String,
+    val collectionId: Int,
+    val storyCount: Int = 0
 )
