@@ -15,7 +15,7 @@ fun NewsList(
     newsItems: List<NewsItem>,
     modifier: Modifier = Modifier,
     onItemClick: (String) -> Unit,
-    onSaveStoryButtonClicked: (storyUrl: String) -> Unit
+    onSaveStoryButtonClicked: (storyUrl: String, storyImageUrl: String?) -> Unit
 ) {
 
     val listState = rememberLazyListState()
@@ -80,5 +80,5 @@ val sampleNewsList = listOf(
     wallpaper = Wallpapers.NONE
 )
 fun NewsListPreview() {
-    NewsList(newsItems = sampleNewsList, onItemClick = {}, onSaveStoryButtonClicked = {})
+    NewsList(newsItems = sampleNewsList, onItemClick = {}, onSaveStoryButtonClicked = { _, _ -> })
 }

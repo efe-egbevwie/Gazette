@@ -20,6 +20,8 @@ import androidx.room.ForeignKey
 data class ReadLaterStoryEntity(
     @ColumnInfo("story_url")
     val storyUrl: String,
+    @ColumnInfo("image_url")
+    val storyImageUrl: String? = null,
     @ColumnInfo("read_later_collection_id")
     val readLaterCollectionId: Int
 )

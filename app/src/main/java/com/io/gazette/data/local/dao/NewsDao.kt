@@ -18,7 +18,7 @@ interface NewsDao {
     fun getAllNews(): Flow<List<NewsEntity>>
 
     @Query("SELECT title, abstract, section, url, writer, published_date, photo_url AS photoUrl,  read_later_stories.read_later_collection_id as readLaterCollectionId FROM news  LEFT JOIN read_later_stories on news.url = read_later_stories.story_url WHERE news.section = :section  GROUP BY url")
-    fun getNewsAndBookmarkCountBySection(section: String):Flow<List<NewsItem>>
+    fun getNewsAndBookmarkCountBySection(section: String): Flow<List<NewsItem>>
 
     @Query("SELECT * FROM news where section=:section")
     fun getNewsBySection(section: String): Flow<List<NewsEntity>>
@@ -35,7 +35,7 @@ interface NewsDao {
     @Query("SELECT * from read_later_collections")
     fun getReadLaterCollections(): Flow<List<ReadLaterCollectionEntity>>
 
-    @Query("SELECT collection_name AS collectionTitle, collection_id AS collectionId, COUNT(read_later_collection_id) AS storyCount from read_later_collections LEFT JOIN read_later_stories on read_later_collection_id = collection_id GROUP BY read_later_collection_id")
+    @Query("SELECT collection_name AS collectionTitle,GROUP_CONCAT(image_url, ',') AS imageUrls ,collection_id AS collectionId, COUNT(read_later_collection_id) AS storyCount from read_later_collections LEFT JOIN read_later_stories on read_later_collection_id = collection_id GROUP BY read_later_collection_id")
     fun getReadLaterCollectionsAndInfo():Flow<List<ReadLaterCollection>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

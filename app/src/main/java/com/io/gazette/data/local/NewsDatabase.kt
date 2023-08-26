@@ -13,14 +13,15 @@ import com.io.gazette.data.local.model.ReadLaterStoryEntity
 
 @Database(
     entities = [NewsEntity::class, ReadLaterCollectionEntity::class, ReadLaterStoryEntity::class],
-    version = 8,
+    version = 9,
     autoMigrations = [
         AutoMigration(from = 6, to = 7, spec = NewsDatabase.RenameReadLaterEntityMigration::class),
         AutoMigration(
             from = 7,
             to = 8,
             spec = NewsDatabase.RenameReadLaterListsToReadLaterCollectionMigration::class
-        )
+        ),
+        AutoMigration(from = 8, to = 9)
     ],
     exportSchema = true
 )

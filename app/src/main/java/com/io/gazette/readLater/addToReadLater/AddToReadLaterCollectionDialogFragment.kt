@@ -76,6 +76,7 @@ class AddToReadLaterCollectionDialogFragment : BottomSheetDialogFragment() {
 
         AddStoryToReadLaterCollectionDialog(
             storyUrl = args.storyUrl,
+            storyImageUrl  = args.storyImageUrl,
             readLaterList = readingList.value.userReadLaterCollections,
             onReadLaterListItemChecked = { readLaterListId ->
                 viewModel.onEvent(
@@ -88,10 +89,11 @@ class AddToReadLaterCollectionDialogFragment : BottomSheetDialogFragment() {
             onCreateNewReadingListClicked = {
                 navigateToAddNewReadLaterCollectionDialog()
             },
-            onDoneButtonClicked = { storyUrl ->
+            onDoneButtonClicked = { storyUrl, storyImageUrl ->
                 viewModel.onEvent(
                     ReadLaterCollectionScreenEvent.AddStoryToReadLaterLists(
-                        storyUrl = storyUrl
+                        storyUrl = storyUrl,
+                        storyImageUrlString = storyImageUrl
                     )
                 )
                 closeDialog()
@@ -103,11 +105,12 @@ class AddToReadLaterCollectionDialogFragment : BottomSheetDialogFragment() {
     @Composable
     fun AddStoryToReadLaterCollectionDialog(
         storyUrl: String,
+        storyImageUrl: String? = null,
         readLaterList: List<ReadLaterCollection>,
         onReadLaterListItemChecked: (readLaterListId: Int) -> Unit,
         onReadLaterListItemUnchecked: (readLaterListId: Int) -> Unit,
         onCreateNewReadingListClicked: () -> Unit,
-        onDoneButtonClicked: (storyUrl: String) -> Unit
+        onDoneButtonClicked: (storyUrl: String, storyImageUrl: String?) -> Unit
     ) {
         Surface {
 
@@ -128,7 +131,7 @@ class AddToReadLaterCollectionDialogFragment : BottomSheetDialogFragment() {
                         modifier = Modifier
                             .padding(top = 8.dp, end = 16.dp)
                             .clickable {
-                                onDoneButtonClicked.invoke(storyUrl)
+                                onDoneButtonClicked.invoke(storyUrl, storyImageUrl)
                             }
                     )
 
@@ -186,7 +189,8 @@ class AddToReadLaterCollectionDialogFragment : BottomSheetDialogFragment() {
 
         AddStoryToReadLaterCollectionDialog(
             storyUrl = "",
-            readLaterList,
+            storyImageUrl = "",
+            readLaterList = readLaterList,
             onReadLaterListItemChecked = { readLaterListId ->
                 Timber.i("selected list id: $readLaterListId")
             },
@@ -197,7 +201,7 @@ class AddToReadLaterCollectionDialogFragment : BottomSheetDialogFragment() {
             onCreateNewReadingListClicked = {
 
             },
-            onDoneButtonClicked = {
+            onDoneButtonClicked = { _, _ ->
 
             }
         )

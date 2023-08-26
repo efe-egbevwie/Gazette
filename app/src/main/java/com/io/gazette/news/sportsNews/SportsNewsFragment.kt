@@ -79,8 +79,8 @@ class SportsNewsFragment : Fragment() {
                     onItemClick = { newsUrl ->
                         navigateToDetailFragment(newsUrl)
                     },
-                    onSaveStoryButtonClicked = { storyUrl ->
-                        navigateToSaveStoryDialog(storyUrl)
+                    onSaveStoryButtonClicked = { storyUrl, storyImageUrl ->
+                        navigateToSaveStoryDialog(storyUrl, storyImageUrl)
                     }
                 )
             }
@@ -92,9 +92,9 @@ class SportsNewsFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private fun navigateToSaveStoryDialog(storyUrl: String) {
+    private fun navigateToSaveStoryDialog(storyUrl: String, storyImageUrl:String? = null) {
         val action =
-            HomeFragmentDirections.actionHomeFragmentToAddToReadingListDialogFragment(storyUrl)
+            HomeFragmentDirections.actionHomeFragmentToAddToReadingListDialogFragment(storyUrl, storyImageUrl)
         findNavController().navigate(action)
     }
 }

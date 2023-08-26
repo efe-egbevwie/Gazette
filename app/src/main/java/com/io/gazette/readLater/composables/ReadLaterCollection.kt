@@ -34,6 +34,7 @@ fun ReadLaterCollectionItem(
     readLaterCollection: ReadLaterCollection,
     onItemClicked: (collectionId: Int) -> Unit,
     onDeleteCollectionClicked: (collectionId: Int) -> Unit,
+    firstThreeStoryImageUrls: List<String>,
     modifier: Modifier = Modifier
 ) {
 
@@ -65,7 +66,8 @@ fun ReadLaterCollectionItem(
 
                 IconButton(
                     onClick = { onDeleteCollectionClicked.invoke(readLaterCollection.collectionId) },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
                         .padding(0.dp)
                 ) {
                     Icon(
@@ -77,13 +79,16 @@ fun ReadLaterCollectionItem(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            val storyCountText = if (readLaterCollection.storyCount == 1){
+            val storyCountText = if (readLaterCollection.storyCount == 1) {
                 "${readLaterCollection.storyCount} story"
-            }else{
+            } else {
                 "${readLaterCollection.storyCount} stories"
             }
 
             Text(text = storyCountText, fontSize = 20.sp)
+
+
+            ReadLaterStoriesImages(modifier = modifier, imageUrls = firstThreeStoryImageUrls)
         }
     }
 }
@@ -100,7 +105,8 @@ fun ReadLaterCollectionsList(
             ReadLaterCollectionItem(
                 readLaterCollection = collection,
                 onItemClicked = { onCollectionItemClicked.invoke(collection.collectionId) },
-                onDeleteCollectionClicked = { onDeleteCollectionClicked.invoke(collection.collectionId) }
+                onDeleteCollectionClicked = { onDeleteCollectionClicked.invoke(collection.collectionId) },
+                firstThreeStoryImageUrls = collection.getThreeImageUrls() ?: emptyList()
             )
 
         }
@@ -119,7 +125,8 @@ fun ReadLaterCollectionItemPreview() {
             storyCount = 7
         ),
         onItemClicked = {},
-        onDeleteCollectionClicked = {}
+        onDeleteCollectionClicked = {},
+        firstThreeStoryImageUrls = listOf("")
     )
 }
 
@@ -157,7 +164,6 @@ fun ReadLaterCollectionsListPreview() {
 
     ReadLaterCollectionsList(
         readLaterCollections = previewReadLaterCollections,
-        onCollectionItemClicked = {},
-        onDeleteCollectionClicked = {}
-    )
+        onCollectionItemClicked = {}
+    ) {}
 }

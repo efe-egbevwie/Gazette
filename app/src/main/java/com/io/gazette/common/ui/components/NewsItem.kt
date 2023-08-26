@@ -47,7 +47,7 @@ fun PreviewNewsListItem() {
         publishedDate = "14/1/2023"
     )
 
-    NewsListItem(newsItem = newsItem, onItemClick = {}, onSaveStoryButtonClicked = {})
+    NewsListItem(newsItem = newsItem, onItemClick = {}, onSaveStoryButtonClicked = {_, _ ->})
 }
 
 
@@ -56,7 +56,7 @@ fun NewsListItem(
     newsItem: NewsItem,
     modifier: Modifier = Modifier,
     onItemClick: (newsUrl: String) -> Unit,
-    onSaveStoryButtonClicked: (storyUrl:String) -> Unit
+    onSaveStoryButtonClicked: (storyUrl:String, storyImageUrl:String?) -> Unit
 ) {
     Card(
         modifier = modifier
@@ -171,7 +171,7 @@ fun NewsListItem(
                         end.linkTo(parent.end)
                         bottom.linkTo(publishedDate.bottom)
                     }
-                    .clickable { onSaveStoryButtonClicked.invoke(newsItem.url) }
+                    .clickable { onSaveStoryButtonClicked.invoke(newsItem.url, newsItem.photoUrl) }
             )
 
         }

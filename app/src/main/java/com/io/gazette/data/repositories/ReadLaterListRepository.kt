@@ -30,11 +30,12 @@ class ReadLaterListRepository @Inject constructor(private val newsDao: NewsDao) 
         return newsDao.getReadLaterCollectionsAndInfo()
     }
 
-    suspend fun saveStoryToReadLaterCollections(storyUrl: String, readLaterCollectionIds: List<Int>) {
+    suspend fun saveStoryToReadLaterCollections(storyUrl: String, storyImageUrl:String? = null, readLaterCollectionIds: List<Int>) {
         readLaterCollectionIds.forEach { id ->
             val readLaterStory = ReadLaterStoryEntity(
-                storyUrl,
-                id
+                storyUrl = storyUrl,
+                storyImageUrl  = storyImageUrl,
+                readLaterCollectionId = id
             )
             newsDao.saveNewsItemToReadLaterCollection(readLaterStory)
         }

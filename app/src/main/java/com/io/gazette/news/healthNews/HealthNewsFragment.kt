@@ -83,21 +83,23 @@ class HealthNewsFragment : Fragment() {
                     onItemClick = { newsUrl ->
                         navigateToDetailFragment(newsUrl)
                     },
-                    onSaveStoryButtonClicked = {storyUrl ->
-                        navigateToSaveStoryDialog(storyUrl) }
+                    onSaveStoryButtonClicked = { storyUrl, storyImageUrl ->
+                        navigateToSaveStoryDialog(storyUrl, storyImageUrl)
+                    }
                 )
             }
 
         }
     }
 
-    private fun navigateToDetailFragment(url: String) {
+    private fun navigateToDetailFragment(url: String, ) {
         val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(url)
         findNavController().navigate(action)
     }
 
-    private fun navigateToSaveStoryDialog(storyUrl:String) {
-        val action = HomeFragmentDirections.actionHomeFragmentToAddToReadingListDialogFragment(storyUrl)
+    private fun navigateToSaveStoryDialog(storyUrl: String, storyImageUrl: String?) {
+        val action =
+            HomeFragmentDirections.actionHomeFragmentToAddToReadingListDialogFragment(storyUrl, storyImageUrl)
         findNavController().navigate(action)
     }
 
