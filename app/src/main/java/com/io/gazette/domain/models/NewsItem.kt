@@ -1,6 +1,7 @@
 package com.io.gazette.domain.models
 
-import com.io.gazette.data.local.model.NewsEntity
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 data class NewsItem(
@@ -10,21 +11,15 @@ data class NewsItem(
     val url: String,
     val photoUrl: String,
     val writer: String,
-    val publishedDate: String? = null,
+    private val publishedDate: LocalDateTime,
     val readLaterCollectionId: Int? = null
 ) {
+
+    fun getFormattedDateTime() =
+        this.publishedDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d, uuuu, HH:mm a"))
+
     fun isValid(): Boolean = this.title.isNotBlank() and this.abstract.isNotBlank()
 
-    fun  isSavedToAnyCollection():Boolean = this.readLaterCollectionId != null
+    fun isSavedToAnyCollection(): Boolean = this.readLaterCollectionId != null
 }
-
-fun NewsItem.toNewsEntity() = NewsEntity(
-    title = this.title,
-    abstract = this.abstract,
-    section = this.section,
-    url = this.url,
-    photoUrl = this.photoUrl,
-    writer = this.writer,
-    publishedDate = this.publishedDate
-)
 

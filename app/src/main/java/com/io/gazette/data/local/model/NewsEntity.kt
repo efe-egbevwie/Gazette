@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.io.gazette.domain.models.NewsItem
+import java.time.LocalDateTime
 
 @Entity(tableName = "news")
 data class NewsEntity(
@@ -16,7 +17,7 @@ data class NewsEntity(
     val photoUrl: String,
     val writer: String,
     @ColumnInfo(name = "published_date")
-    val publishedDate: String? = null
+    val publishedDate: LocalDateTime
 ) {
     fun toDomainNewsItem() = NewsItem(
         title, abstract, section, url, photoUrl, writer, publishedDate

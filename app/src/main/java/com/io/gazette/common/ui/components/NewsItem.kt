@@ -27,6 +27,7 @@ import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
 import com.io.gazette.R
 import com.io.gazette.domain.models.NewsItem
+import java.time.LocalDateTime
 
 @Preview(
     device = "id:pixel_4a",
@@ -44,10 +45,11 @@ fun PreviewNewsListItem() {
         photoUrl = "",
         url = "https://images.unsplash.com/photo-1495020689067-958852a7765e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2338&q=80",
         writer = "Efe",
-        publishedDate = "14/1/2023"
+        publishedDate = LocalDateTime.now()
+
     )
 
-    NewsListItem(newsItem = newsItem, onItemClick = {}, onSaveStoryButtonClicked = {_, _ ->})
+    NewsListItem(newsItem = newsItem, onItemClick = {}, onSaveStoryButtonClicked = { _, _ -> })
 }
 
 
@@ -56,7 +58,7 @@ fun NewsListItem(
     newsItem: NewsItem,
     modifier: Modifier = Modifier,
     onItemClick: (newsUrl: String) -> Unit,
-    onSaveStoryButtonClicked: (storyUrl:String, storyImageUrl:String?) -> Unit
+    onSaveStoryButtonClicked: (storyUrl: String, storyImageUrl: String?) -> Unit
 ) {
     Card(
         modifier = modifier
@@ -142,12 +144,12 @@ fun NewsListItem(
                     }
             )
 
-            Text(text = newsItem.publishedDate.orEmpty(),
+            Text(text = newsItem.getFormattedDateTime(),
                 fontSize = 12.sp,
                 textAlign = TextAlign.Start,
                 modifier = modifier
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                    .fillMaxWidth(0.5f)
+                    .fillMaxWidth(0.6f)
                     .constrainAs(publishedDate) {
                         top.linkTo(author.bottom)
                         linkTo(start = author.start, end = parent.end, bias = 0F)
@@ -157,7 +159,7 @@ fun NewsListItem(
 
             val imageResource = if (newsItem.isSavedToAnyCollection()) {
                 painterResource(id = R.drawable.ic_bookmark_icon_filled)
-            }else{
+            } else {
                 painterResource(id = R.drawable.ic_bookmark_icon)
             }
             Image(

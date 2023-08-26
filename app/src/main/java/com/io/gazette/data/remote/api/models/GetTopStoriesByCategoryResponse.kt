@@ -2,12 +2,12 @@ package com.io.gazette.data.remote.api.models
 
 
 import com.io.gazette.data.local.model.NewsEntity
-import com.io.gazette.domain.models.NewsItem
-import com.io.gazette.utils.DateTimeUtils.formatDateTimeStamp
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.*
 import kotlinx.serialization.json.*
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 @Serializable
 data class GetTopStoriesByCategoryResponse(
@@ -221,16 +221,6 @@ enum class Type(val value: String) {
 }
 
 
-fun Result.toDomainNewsItem() = NewsItem(
-    title = this.title.orEmpty(),
-    abstract = this.abstract.orEmpty(),
-    url = this.url.orEmpty(),
-    section = this.section.orEmpty(),
-    photoUrl = this.multimedia?.find { it.url != null }?.url.orEmpty(),
-    writer = this.byline.orEmpty(),
-    publishedDate = this.createdDate?.formatDateTimeStamp()
-)
-
 fun Result.toNewsEntity() = NewsEntity(
     title = this.title.orEmpty(),
     abstract = this.abstract.orEmpty(),
@@ -238,5 +228,5 @@ fun Result.toNewsEntity() = NewsEntity(
     section = this.section.orEmpty(),
     photoUrl = this.multimedia?.find { it.url != null }?.url.orEmpty(),
     writer = this.byline.orEmpty(),
-    publishedDate = this.createdDate?.formatDateTimeStamp()
+    publishedDate = OffsetDateTime.parse(this.createdDate).toLocalDateTime()
 )

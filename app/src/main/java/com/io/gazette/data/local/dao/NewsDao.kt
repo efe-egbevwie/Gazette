@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NewsDao {
 
-    @Query("SELECT * FROM news")
+    @Query("SELECT * FROM news ORDER BY published_date desc")
     fun getAllNews(): Flow<List<NewsEntity>>
 
-    @Query("SELECT title, abstract, section, url, writer, published_date, photo_url AS photoUrl,  read_later_stories.read_later_collection_id as readLaterCollectionId FROM news  LEFT JOIN read_later_stories on news.url = read_later_stories.story_url WHERE news.section = :section  GROUP BY url")
+    @Query("SELECT title, abstract, section, url, writer, published_date as publishedDate, photo_url AS photoUrl,  read_later_stories.read_later_collection_id as readLaterCollectionId  FROM news   LEFT JOIN read_later_stories on news.url = read_later_stories.story_url WHERE news.section = :section  GROUP BY url ORDER BY published_date desc")
     fun getNewsAndBookmarkCountBySection(section: String): Flow<List<NewsItem>>
 
     @Query("SELECT * FROM news where section=:section")
