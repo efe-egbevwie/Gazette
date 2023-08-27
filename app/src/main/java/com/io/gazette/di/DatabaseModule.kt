@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.io.gazette.data.local.NewsDatabase
 import com.io.gazette.data.local.dao.NewsDao
+import com.io.gazette.data.local.dao.ReadLaterDao
 import com.io.gazette.data.local.migrations.MIGRATION_2_3
 import com.io.gazette.data.local.migrations.MIGRATION_3_4
 import com.io.gazette.data.repositories.ReadLaterListRepository
@@ -37,7 +38,14 @@ object DatabaseModule {
     }
 
     @Provides
-    fun provideReadingListRepo(newsDao: NewsDao):ReadLaterListRepository{
-        return ReadLaterListRepository(newsDao)
+    fun provideReadLaterDao(newsDatabase: NewsDatabase): ReadLaterDao {
+        return newsDatabase.readLaterDao()
+    }
+
+    @Provides
+    fun provideReadingListRepo(
+        readLaterDao: ReadLaterDao
+    ): ReadLaterListRepository {
+        return ReadLaterListRepository(readLaterDao)
     }
 }

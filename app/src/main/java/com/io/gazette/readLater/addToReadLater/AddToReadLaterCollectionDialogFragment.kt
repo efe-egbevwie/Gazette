@@ -10,15 +10,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,6 +26,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.io.gazette.R
+import com.io.gazette.common.ui.theme.GazetteTheme
 import com.io.gazette.domain.models.ReadLaterCollection
 import com.io.gazette.readLater.composables.AddToReadLaterList
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,7 +52,10 @@ class AddToReadLaterCollectionDialogFragment : BottomSheetDialogFragment() {
                     )
 
                     setContent {
-                        AddToReadingListDialog()
+                        GazetteTheme {
+                            AddToReadingListDialog()
+                        }
+
                     }
                 }
 
@@ -76,7 +79,7 @@ class AddToReadLaterCollectionDialogFragment : BottomSheetDialogFragment() {
 
         AddStoryToReadLaterCollectionDialog(
             storyUrl = args.storyUrl,
-            storyImageUrl  = args.storyImageUrl,
+            storyImageUrl = args.storyImageUrl,
             readLaterList = readingList.value.userReadLaterCollections,
             onReadLaterListItemChecked = { readLaterListId ->
                 viewModel.onEvent(
@@ -125,7 +128,6 @@ class AddToReadLaterCollectionDialogFragment : BottomSheetDialogFragment() {
                     Spacer(modifier = Modifier.weight(1f))
 
                     Text(
-                        color = colorResource(id = R.color.colorPrimary),
                         text = "Done",
                         fontSize = 21.sp,
                         modifier = Modifier
@@ -142,7 +144,6 @@ class AddToReadLaterCollectionDialogFragment : BottomSheetDialogFragment() {
 
                 Text(
                     text = "Create new Reading List",
-                    color = colorResource(id = R.color.colorPrimary),
                     fontSize = 21.sp,
                     modifier = Modifier
                         .padding(start = 16.dp, top = 10.dp)
@@ -186,25 +187,29 @@ class AddToReadLaterCollectionDialogFragment : BottomSheetDialogFragment() {
             ReadLaterCollection(collectionId = 6, collectionTitle = "Courses")
 
         )
+        GazetteTheme {
 
-        AddStoryToReadLaterCollectionDialog(
-            storyUrl = "",
-            storyImageUrl = "",
-            readLaterList = readLaterList,
-            onReadLaterListItemChecked = { readLaterListId ->
-                Timber.i("selected list id: $readLaterListId")
-            },
-            onReadLaterListItemUnchecked = { readLaterListId ->
-                Timber.i("unselected list id: $readLaterListId")
+            AddStoryToReadLaterCollectionDialog(
+                storyUrl = "",
+                storyImageUrl = "",
+                readLaterList = readLaterList,
+                onReadLaterListItemChecked = { readLaterListId ->
+                    Timber.i("selected list id: $readLaterListId")
+                },
+                onReadLaterListItemUnchecked = { readLaterListId ->
+                    Timber.i("unselected list id: $readLaterListId")
 
-            },
-            onCreateNewReadingListClicked = {
+                },
+                onCreateNewReadingListClicked = {
 
-            },
-            onDoneButtonClicked = { _, _ ->
+                },
+                onDoneButtonClicked = { _, _ ->
 
-            }
-        )
+                }
+            )
+        }
+
+
     }
 
 

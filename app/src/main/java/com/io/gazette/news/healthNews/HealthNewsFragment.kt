@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -19,6 +19,7 @@ import androidx.navigation.fragment.findNavController
 import com.io.gazette.MainViewModel
 import com.io.gazette.R
 import com.io.gazette.common.ui.components.NewsList
+import com.io.gazette.common.ui.theme.GazetteTheme
 import com.io.gazette.domain.models.NewsItem
 import com.io.gazette.home.HomeFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,7 +44,11 @@ class HealthNewsFragment : Fragment() {
                     )
                 )
 
-                setContent { HealthNews() }
+                setContent {
+                    GazetteTheme {
+                        HealthNews()
+                    }
+                }
 
             }
 
@@ -92,14 +97,17 @@ class HealthNewsFragment : Fragment() {
         }
     }
 
-    private fun navigateToDetailFragment(url: String, ) {
+    private fun navigateToDetailFragment(url: String) {
         val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(url)
         findNavController().navigate(action)
     }
 
     private fun navigateToSaveStoryDialog(storyUrl: String, storyImageUrl: String?) {
         val action =
-            HomeFragmentDirections.actionHomeFragmentToAddToReadingListDialogFragment(storyUrl, storyImageUrl)
+            HomeFragmentDirections.actionHomeFragmentToAddToReadingListDialogFragment(
+                storyUrl,
+                storyImageUrl
+            )
         findNavController().navigate(action)
     }
 

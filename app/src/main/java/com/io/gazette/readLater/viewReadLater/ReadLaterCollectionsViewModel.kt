@@ -23,8 +23,9 @@ class ReadLaterCollectionsViewModel @Inject constructor(private val readLaterRep
     fun onEvent(event: ReadLaterCollectionsScreenEvent) {
         when (event) {
             is ReadLaterCollectionsScreenEvent.GetAllReadLaterCollections -> getAllReadLaterCollections()
-
-            else -> {}
+            is ReadLaterCollectionsScreenEvent.DeleteReadLaterCollection -> deleteReadLaterCollection(
+                collectionId = event.collectionId
+            )
         }
     }
 
@@ -32,10 +33,17 @@ class ReadLaterCollectionsViewModel @Inject constructor(private val readLaterRep
         viewModelScope.launch {
             updateScreenState(isLoading = true)
             readLaterRepository.getReadLaterCollectionsAndInfo().collect { collections ->
+                Timber.i("my read later: $collections")
                 updateScreenState(isLoading = false, readLaterCollections = collections)
             }
         }
 
+    }
+
+    private fun deleteReadLaterCollection(collectionId: Int) {
+        viewModelScope.launch {
+            readLaterRepository.deleteReadLaterCollection(collectionId)
+        }
     }
 
 

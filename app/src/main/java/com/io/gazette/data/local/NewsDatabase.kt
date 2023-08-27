@@ -8,6 +8,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.AutoMigrationSpec
 import com.io.gazette.data.local.dao.NewsDao
+import com.io.gazette.data.local.dao.ReadLaterDao
 import com.io.gazette.data.local.model.NewsEntity
 import com.io.gazette.data.local.model.ReadLaterCollectionEntity
 import com.io.gazette.data.local.model.ReadLaterStoryEntity
@@ -30,6 +31,8 @@ import com.io.gazette.data.local.model.ReadLaterStoryEntity
 @TypeConverters(TimeStampTypeConverters::class)
 abstract class NewsDatabase : RoomDatabase() {
     abstract fun newsDao(): NewsDao
+
+    abstract fun readLaterDao(): ReadLaterDao
 
     @RenameTable(fromTableName = "reading_list", toTableName = "read_later_lists")
     class RenameReadLaterEntityMigration : AutoMigrationSpec

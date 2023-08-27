@@ -12,9 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +34,7 @@ import com.io.gazette.R
 import com.io.gazette.common.ui.components.CloseScreenButton
 import com.io.gazette.common.ui.components.GazetteButton
 import com.io.gazette.common.ui.components.ScreenTitleText
+import com.io.gazette.common.ui.theme.GazetteTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -54,22 +56,25 @@ class AddNewReadingListFragment : BottomSheetDialogFragment() {
                 )
 
                 setContent {
-                    CreateNewReadingListScreenContent(
-                        onReadingListTitleChanged = { newTitle ->
-                            viewModel.onEvent(
-                                ReadLaterCollectionScreenEvent.NewReadLaterListTitleChanged(
-                                    newTitle
+                    GazetteTheme {
+                        CreateNewReadingListScreenContent(
+                            onReadingListTitleChanged = { newTitle ->
+                                viewModel.onEvent(
+                                    ReadLaterCollectionScreenEvent.NewReadLaterListTitleChanged(
+                                        newTitle
+                                    )
                                 )
-                            )
-                        },
-                        onCreateListButtonClicked = {
-                            viewModel.onEvent(ReadLaterCollectionScreenEvent.CreateNewReadLaterList)
-                            closeFragment()
-                        },
-                        onCloseScreenButtonClicked = {
-                            closeFragment()
-                        }
-                    )
+                            },
+                            onCreateListButtonClicked = {
+                                viewModel.onEvent(ReadLaterCollectionScreenEvent.CreateNewReadLaterList)
+                                closeFragment()
+                            },
+                            onCloseScreenButtonClicked = {
+                                closeFragment()
+                            }
+                        )
+                    }
+
                 }
             }
         }
@@ -80,6 +85,7 @@ class AddNewReadingListFragment : BottomSheetDialogFragment() {
     }
 
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun CreateNewReadingListScreenContent(
         onReadingListTitleChanged: (title: String) -> Unit,
@@ -147,10 +153,14 @@ class AddNewReadingListFragment : BottomSheetDialogFragment() {
     @Composable
     @Preview(device = "id:pixel_7", showSystemUi = true, showBackground = true)
     fun CreateNewReadingListScreenPreview() {
-        CreateNewReadingListScreenContent(
-            onReadingListTitleChanged = {},
-            onCreateListButtonClicked = {},
-            onCloseScreenButtonClicked = {})
+        GazetteTheme {
+
+            CreateNewReadingListScreenContent(
+                onReadingListTitleChanged = {},
+                onCreateListButtonClicked = {},
+                onCloseScreenButtonClicked = {})
+        }
+
     }
 
 

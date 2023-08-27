@@ -6,7 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -24,6 +25,7 @@ import coil.request.ImageRequest
 import com.io.gazette.MainViewModel
 import com.io.gazette.R
 import com.io.gazette.common.ui.components.NewsList
+import com.io.gazette.common.ui.theme.GazetteTheme
 import com.io.gazette.domain.models.NewsItem
 import com.io.gazette.home.HomeFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
@@ -78,7 +80,10 @@ class WorldNewsFragment : Fragment() {
                     )
                 )
                 setContent {
-                    WorldNews()
+                    GazetteTheme {
+                        WorldNews()
+                    }
+
                 }
             }
         }
@@ -95,11 +100,14 @@ class WorldNewsFragment : Fragment() {
     fun WorldNews() {
         val state = viewModel.worldNewsState.collectAsState()
 
-        WorldNewsContent(
-            isLoading = state.value.isLoadingWorldNews,
-            worldNews = state.value.worldNews,
-            errorMessage = state.value.error?.getContentIfNotHandled()?.message
-        )
+
+        Surface {
+            WorldNewsContent(
+                isLoading = state.value.isLoadingWorldNews,
+                worldNews = state.value.worldNews,
+                errorMessage = state.value.error?.getContentIfNotHandled()?.message
+            )
+        }
     }
 
     @Composable
@@ -130,6 +138,7 @@ class WorldNewsFragment : Fragment() {
             }
 
         }
+
 
     }
 

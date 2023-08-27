@@ -3,6 +3,7 @@ package com.io.gazette.common.ui.components
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,9 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -29,30 +31,6 @@ import com.io.gazette.R
 import com.io.gazette.domain.models.NewsItem
 import java.time.LocalDateTime
 
-@Preview(
-    device = "id:pixel_4a",
-    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL
-)
-@Composable
-fun PreviewNewsListItem() {
-    val newsItem = NewsItem(
-        title = "This is a sample news title ",
-        abstract = "This is a sample news title for 30th of march 2022" +
-                "This is a sample news title for 30th of march 2022" +
-                "This is a sample news title for 30th of march 2022" +
-                "This is a sample news title for 30th of march 2022",
-        section = "Business",
-        photoUrl = "",
-        url = "https://images.unsplash.com/photo-1495020689067-958852a7765e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2338&q=80",
-        writer = "Efe",
-        publishedDate = LocalDateTime.now()
-
-    )
-
-    NewsListItem(newsItem = newsItem, onItemClick = {}, onSaveStoryButtonClicked = { _, _ -> })
-}
-
-
 @Composable
 fun NewsListItem(
     newsItem: NewsItem,
@@ -60,18 +38,22 @@ fun NewsListItem(
     onItemClick: (newsUrl: String) -> Unit,
     onSaveStoryButtonClicked: (storyUrl: String, storyImageUrl: String?) -> Unit
 ) {
+
     Card(
         modifier = modifier
             .fillMaxSize()
             .padding(10.dp)
+            .background(color = MaterialTheme.colorScheme.surface)
             .clickable { onItemClick(newsItem.url) },
-        border = BorderStroke(1.dp, color = MaterialTheme.colors.onSurface),
-        elevation = 8.dp,
+        border = BorderStroke(1.dp, color = MaterialTheme.colorScheme.onSurface),
+        elevation = CardDefaults.cardElevation(8.dp),
         shape = RoundedCornerShape(8.dp)
     ) {
 
         ConstraintLayout(
-            modifier = modifier.fillMaxSize()
+            modifier = modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.surface)
         ) {
             val (photo,
                 title,
@@ -173,10 +155,40 @@ fun NewsListItem(
                         end.linkTo(parent.end)
                         bottom.linkTo(publishedDate.bottom)
                     }
-                    .clickable { onSaveStoryButtonClicked.invoke(newsItem.url, newsItem.photoUrl) }
+                    .clickable {
+                        onSaveStoryButtonClicked.invoke(
+                            newsItem.url,
+                            newsItem.photoUrl
+                        )
+                    }
             )
 
         }
 
+
     }
+}
+
+
+@Preview(
+    device = "id:pixel_4a",
+    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_NORMAL
+)
+@Composable
+fun PreviewNewsListItem() {
+    val newsItem = NewsItem(
+        title = "This is a sample news title ",
+        abstract = "This is a sample news title for 30th of march 2022" +
+                "This is a sample news title for 30th of march 2022" +
+                "This is a sample news title for 30th of march 2022" +
+                "This is a sample news title for 30th of march 2022",
+        section = "Business",
+        photoUrl = "",
+        url = "https://images.unsplash.com/photo-1495020689067-958852a7765e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2338&q=80",
+        writer = "Efe",
+        publishedDate = LocalDateTime.now()
+
+    )
+
+    NewsListItem(newsItem = newsItem, onItemClick = {}, onSaveStoryButtonClicked = { _, _ -> })
 }

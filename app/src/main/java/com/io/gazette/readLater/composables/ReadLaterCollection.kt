@@ -11,12 +11,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +47,7 @@ fun ReadLaterCollectionItem(
                 onItemClicked.invoke(readLaterCollection.collectionId)
             },
         border = BorderStroke(width = 2.dp, color = colorResource(id = R.color.colorPrimary)),
-        elevation = 20.dp,
+        elevation = CardDefaults.cardElevation(20.dp),
         shape = RoundedCornerShape(4.dp)
     ) {
         Column(
@@ -126,7 +127,7 @@ fun ReadLaterCollectionItemPreview() {
         ),
         onItemClicked = {},
         onDeleteCollectionClicked = {},
-        firstThreeStoryImageUrls = listOf("")
+        firstThreeStoryImageUrls = listOf("", "", "")
     )
 }
 

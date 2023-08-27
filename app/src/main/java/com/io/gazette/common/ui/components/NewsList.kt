@@ -1,9 +1,11 @@
 package com.io.gazette.common.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,7 +22,13 @@ fun NewsList(
 ) {
 
     val listState = rememberLazyListState()
-    LazyColumn(modifier.fillMaxSize(), state = listState) {
+
+    LazyColumn(
+        modifier
+            .fillMaxSize()
+            ,
+        state = listState,
+    ) {
         items(newsItems) { newsItem ->
             if (newsItem.isValid()) NewsListItem(
                 newsItem = newsItem,
@@ -29,6 +37,7 @@ fun NewsList(
             )
         }
     }
+
 }
 
 

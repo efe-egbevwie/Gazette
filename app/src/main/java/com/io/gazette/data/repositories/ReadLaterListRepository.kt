@@ -1,7 +1,7 @@
 package com.io.gazette.data.repositories
 
 
-import com.io.gazette.data.local.dao.NewsDao
+import com.io.gazette.data.local.dao.ReadLaterDao
 import com.io.gazette.data.local.model.ReadLaterCollectionEntity
 import com.io.gazette.data.local.model.ReadLaterStoryEntity
 import com.io.gazette.data.local.model.toDomainRedLaterCollection
@@ -10,16 +10,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class ReadLaterListRepository @Inject constructor(private val newsDao: NewsDao) {
+class ReadLaterListRepository @Inject constructor(private val readLaterDao: ReadLaterDao) {
 
     suspend fun addNewReadLaterCollection(listTitle: String) {
         val newReadLaterCollectionEntity = ReadLaterCollectionEntity(collectionName = listTitle)
-        newsDao.createReadingList(newReadLaterCollectionEntity)
+        readLaterDao.createReadingList(newReadLaterCollectionEntity)
     }
 
 
+    suspend fun deleteReadLaterCollection(collectionId:Int){
+        readLaterDao.deleteReadLaterCollection(collectionId)
+    }
+
     fun getReadLaterCollections(): Flow<List<ReadLaterCollection>> {
-        return newsDao.getReadLaterCollections().map { readLaterListEntity ->
+        return readLaterDao.getReadLaterCollections().map { readLaterListEntity ->
             readLaterListEntity.map { entity ->
                 entity.toDomainRedLaterCollection()
             }
@@ -27,17 +31,21 @@ class ReadLaterListRepository @Inject constructor(private val newsDao: NewsDao) 
     }
 
     fun getReadLaterCollectionsAndInfo(): Flow<List<ReadLaterCollection>> {
-        return newsDao.getReadLaterCollectionsAndInfo()
+        return readLaterDao.getReadLaterCollectionsAndInfo()
     }
 
-    suspend fun saveStoryToReadLaterCollections(storyUrl: String, storyImageUrl:String? = null, readLaterCollectionIds: List<Int>) {
+    suspend fun saveStoryToReadLaterCollections(
+        storyUrl: String,
+        storyImageUrl: String? = null,
+        readLaterCollectionIds: List<Int>
+    ) {
         readLaterCollectionIds.forEach { id ->
             val readLaterStory = ReadLaterStoryEntity(
                 storyUrl = storyUrl,
-                storyImageUrl  = storyImageUrl,
+                storyImageUrl = storyImageUrl,
                 readLaterCollectionId = id
             )
-            newsDao.saveNewsItemToReadLaterCollection(readLaterStory)
+            readLaterDao.saveNewsItemToReadLaterCollection(readLaterStory)
         }
     }
 

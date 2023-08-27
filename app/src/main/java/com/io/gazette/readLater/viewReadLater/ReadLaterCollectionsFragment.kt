@@ -9,8 +9,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,6 +26,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.io.gazette.R
 import com.io.gazette.common.ui.Pixel6APreview
+import com.io.gazette.common.ui.theme.GazetteTheme
+import com.io.gazette.common.ui.theme.md_theme_light_primary
 import com.io.gazette.domain.models.ReadLaterCollection
 import com.io.gazette.readLater.composables.ReadLaterCollectionsList
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,7 +51,10 @@ class ReadLaterCollectionsFragment : Fragment() {
                 )
 
                 setContent {
-                    ReadLaterCollectionsScreen()
+                    GazetteTheme {
+                        ReadLaterCollectionsScreen()
+                    }
+
                 }
             }
 
@@ -67,7 +73,13 @@ class ReadLaterCollectionsFragment : Fragment() {
         ReadLaterCollectionsScreenContent(
             readLaterCollections = state.value.readLaterCollections,
             onCollectionClicked = {},
-            onDeleteCollectionClicked = {}
+            onDeleteCollectionClicked = { collectionId ->
+                viewModel.onEvent(
+                    ReadLaterCollectionsScreenEvent.DeleteReadLaterCollection(
+                        collectionId
+                    )
+                )
+            }
         )
     }
 
