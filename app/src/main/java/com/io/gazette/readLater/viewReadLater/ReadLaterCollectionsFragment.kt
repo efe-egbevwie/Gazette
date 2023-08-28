@@ -95,7 +95,6 @@ class ReadLaterCollectionsFragment : Fragment() {
                     text = "Read Later Collections",
                     fontWeight = FontWeight.Bold,
                     fontSize = 23.sp,
-                    color = colorResource(id = R.color.colorPrimary),
                     modifier = Modifier.padding(start = 16.dp, top = 20.dp)
                 )
 

@@ -7,11 +7,13 @@ import com.io.gazette.data.remote.api.NytApi
 import com.io.gazette.data.remote.api.models.toNewsEntity
 import com.io.gazette.di.DeviceConnectivityUtil
 import com.io.gazette.domain.models.GetDataResult
+import com.io.gazette.domain.models.NewsCategory
 import com.io.gazette.domain.models.NewsItem
-import com.io.gazette.domain.models.NewsSection
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.onEmpty
 import timber.log.Timber
+import java.net.SocketException
 import javax.inject.Inject
 
 class NytRepository @Inject constructor(
@@ -20,55 +22,51 @@ class NytRepository @Inject constructor(
     connectivityModule: DeviceConnectivityUtil
 ) {
     private val deviceHasInternetConnection = connectivityModule.hasInternetConnection()
-    suspend fun getWorldNews(): GetDataResult<Flow<List<NewsItem>>> {
 
+    suspend fun refreshNews(category: NewsCategory): GetDataResult<Flow<List<NewsItem>>> {
         return try {
-            if (deviceHasInternetConnection) {
-                getNewsFromApi(section = NewsSection.WORLD)
+            if (!deviceHasInternetConnection) {
+                return GetDataResult.Failure(exception = SocketException())
             }
 
-            GetDataResult.Success(data = getNewsFromDb(section = "world"))
+            getNewsFromApi(section = category)
+
+            val section = when (category) {
+                is NewsCategory.World -> "world"
+                is NewsCategory.Business -> "business"
+                is NewsCategory.Health -> "health"
+                is NewsCategory.Sports -> "sports"
+            }
+
+            GetDataResult.Success(data = getNewsFromDb(section = section))
         } catch (e: Exception) {
             GetDataResult.Failure(exception = e)
         }
 
     }
 
-    suspend fun getBusinessNews(): GetDataResult<Flow<List<NewsItem>>> {
+    suspend fun getNewsByCategory(category: NewsCategory): GetDataResult<Flow<List<NewsItem>>> {
         return try {
-            if (deviceHasInternetConnection) {
-                getNewsFromApi(section = NewsSection.BUSINESS)
+
+            val section = when (category) {
+                is NewsCategory.World -> "world"
+                is NewsCategory.Business -> "business"
+                is NewsCategory.Health -> "health"
+                is NewsCategory.Sports -> "sports"
             }
 
-            GetDataResult.Success(data = getNewsFromDb(section = "business"))
+            val newsFromDb = getNewsFromDb(section)
+
+            newsFromDb.first().ifEmpty {
+                Timber.i("news is empty")
+                getNewsFromApi(category)
+            }
+
+            GetDataResult.Success(data = getNewsFromDb(section = section))
         } catch (e: Exception) {
             GetDataResult.Failure(exception = e)
         }
 
-    }
-
-    suspend fun getSportsNews(): GetDataResult<Flow<List<NewsItem>>> {
-        return try {
-            if (deviceHasInternetConnection) {
-                getNewsFromApi(section = NewsSection.SPORTS)
-            }
-
-            GetDataResult.Success(data = getNewsFromDb(section = "sports"))
-        } catch (e: Exception) {
-            GetDataResult.Failure(exception = e)
-        }
-    }
-
-    suspend fun getHealthNews(): GetDataResult<Flow<List<NewsItem>>> {
-        return try {
-            if (deviceHasInternetConnection) {
-                getNewsFromApi(section = NewsSection.HEALTH)
-            }
-
-            GetDataResult.Success(data = getNewsFromDb(section = "health"))
-        } catch (e: Exception) {
-            GetDataResult.Failure(exception = e)
-        }
     }
 
 
@@ -76,13 +74,13 @@ class NytRepository @Inject constructor(
         return newsDao.getNewsAndBookmarkCountBySection(section)
     }
 
-    private suspend fun getNewsFromApi(section: NewsSection) {
+    private suspend fun getNewsFromApi(section: NewsCategory) {
         try {
             val newsFromApi = when (section) {
-                NewsSection.WORLD -> nytApi.getTopWorldNews()
-                NewsSection.BUSINESS -> nytApi.getTopBusinessNews()
-                NewsSection.HEALTH -> nytApi.getTopHealthNews()
-                NewsSection.SPORTS -> nytApi.getTopSportsNews()
+                NewsCategory.World -> nytApi.getTopWorldNews()
+                NewsCategory.Business -> nytApi.getTopBusinessNews()
+                NewsCategory.Health -> nytApi.getTopHealthNews()
+                NewsCategory.Sports -> nytApi.getTopSportsNews()
             }
 
             val newsFromApiResults = newsFromApi.results?.map { it.toNewsEntity() }
