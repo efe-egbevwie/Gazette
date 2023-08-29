@@ -9,9 +9,10 @@ import com.io.gazette.di.DeviceConnectivityUtil
 import com.io.gazette.domain.models.GetDataResult
 import com.io.gazette.domain.models.NewsCategory
 import com.io.gazette.domain.models.NewsItem
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.onEmpty
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.net.SocketException
 import javax.inject.Inject
@@ -29,7 +30,13 @@ class NytRepository @Inject constructor(
                 return GetDataResult.Failure(exception = SocketException())
             }
 
-            getNewsFromApi(section = category)
+            coroutineScope {
+                launch { getNewsFromApi(section = NewsCategory.World) }
+                launch { getNewsFromApi(section = NewsCategory.Business) }
+                launch { getNewsFromApi(section = NewsCategory.Health) }
+                launch { getNewsFromApi(section = NewsCategory.Sports) }
+            }
+
 
             val section = when (category) {
                 is NewsCategory.World -> "world"
