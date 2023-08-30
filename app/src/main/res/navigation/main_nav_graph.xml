@@ -22,12 +22,15 @@
     </fragment>
     <fragment
         android:id="@+id/readLaterCollectionsFragment"
-        android:name="com.io.gazette.readLater.viewReadLater.ReadLaterCollectionsFragment"
+        android:name="com.io.gazette.readLater.readLaterCollection.ReadLaterCollectionsFragment"
         android:label="fragment_bookmarks"
         tools:layout="@layout/fragment_read_later" >
         <action
             android:id="@+id/action_readLaterCollectionsFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
+        <action
+            android:id="@+id/action_readLaterCollectionsFragment_to_viewReadLaterCollectionFragment"
+            app:destination="@id/viewReadLaterCollectionFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
@@ -57,7 +60,22 @@
     </dialog>
     <dialog
         android:id="@+id/addNewReadLaterCollectionFragment"
-        android:name="com.io.gazette.readLater.addToReadLater.AddNewReadingListFragment"
+        android:name="com.io.gazette.readLater.addToReadLater.CreateNewReadLaterCollectionFragment"
         android:label="fragment_add_new_read_later_collection"
         tools:layout="@layout/fragment_add_new_reading_list" />
+    <fragment
+        android:id="@+id/viewReadLaterCollectionFragment"
+        android:name="com.io.gazette.readLater.viewReadLater.ViewReadLaterCollectionFragment"
+        android:label="fragment_view_read_later_collection"
+        tools:layout="@layout/fragment_view_read_later_collection" >
+        <argument
+            android:name="collectionId"
+            app:argType="integer" />
+        <argument
+            android:name="collectionTitle"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_viewReadLaterCollectionFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
 </navigation>

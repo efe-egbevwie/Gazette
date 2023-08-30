@@ -5,6 +5,7 @@ import com.io.gazette.data.local.dao.ReadLaterDao
 import com.io.gazette.data.local.model.ReadLaterCollectionEntity
 import com.io.gazette.data.local.model.ReadLaterStoryEntity
 import com.io.gazette.data.local.model.toDomainRedLaterCollection
+import com.io.gazette.domain.models.NewsItem
 import com.io.gazette.domain.models.ReadLaterCollection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -18,8 +19,12 @@ class ReadLaterListRepository @Inject constructor(private val readLaterDao: Read
     }
 
 
-    suspend fun deleteReadLaterCollection(collectionId:Int){
+    suspend fun deleteReadLaterCollection(collectionId: Int) {
         readLaterDao.deleteReadLaterCollection(collectionId)
+    }
+
+    suspend fun deleteStoryFromCollection(storyUrl: String) {
+        readLaterDao.deleteStoryFromCollection(storyUrl)
     }
 
     fun getReadLaterCollections(): Flow<List<ReadLaterCollection>> {
@@ -47,6 +52,10 @@ class ReadLaterListRepository @Inject constructor(private val readLaterDao: Read
             )
             readLaterDao.saveNewsItemToReadLaterCollection(readLaterStory)
         }
+    }
+
+    fun getStoriesInCollection(collectionId: Int): Flow<List<NewsItem>> {
+        return readLaterDao.getAllItemsForReadLaterCollection(collectionId)
     }
 
 }

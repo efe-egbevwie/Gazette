@@ -1,4 +1,4 @@
-package com.io.gazette.readLater.viewReadLater
+package com.io.gazette.readLater.readLaterCollection
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,18 +17,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.io.gazette.R
 import com.io.gazette.common.ui.Pixel6APreview
 import com.io.gazette.common.ui.theme.GazetteTheme
-import com.io.gazette.common.ui.theme.md_theme_light_primary
 import com.io.gazette.domain.models.ReadLaterCollection
 import com.io.gazette.readLater.composables.ReadLaterCollectionsList
+import com.io.gazette.utils.navigateSafelyWithAnimations
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -72,7 +71,9 @@ class ReadLaterCollectionsFragment : Fragment() {
 
         ReadLaterCollectionsScreenContent(
             readLaterCollections = state.value.readLaterCollections,
-            onCollectionClicked = {},
+            onCollectionClicked = { collectionId: Int, collectionTitle: String ->
+                navigateToViewCollectionFragment(collectionId, collectionTitle)
+            },
             onDeleteCollectionClicked = { collectionId ->
                 viewModel.onEvent(
                     ReadLaterCollectionsScreenEvent.DeleteReadLaterCollection(
@@ -86,7 +87,7 @@ class ReadLaterCollectionsFragment : Fragment() {
     @Composable
     fun ReadLaterCollectionsScreenContent(
         readLaterCollections: List<ReadLaterCollection>,
-        onCollectionClicked: (collectionId: Int) -> Unit,
+        onCollectionClicked: (collectionId: Int, collectionTitle: String) -> Unit,
         onDeleteCollectionClicked: (collectionId: Int) -> Unit
     ) {
         Surface(modifier = Modifier.fillMaxSize()) {
@@ -107,6 +108,16 @@ class ReadLaterCollectionsFragment : Fragment() {
                 )
             }
         }
+    }
+
+
+    private fun navigateToViewCollectionFragment(collectionId: Int, collectionTitle: String) {
+        val action =
+            ReadLaterCollectionsFragmentDirections.actionReadLaterCollectionsFragmentToViewReadLaterCollectionFragment(
+                collectionId, collectionTitle
+            )
+
+        findNavController().navigateSafelyWithAnimations(action)
     }
 
 
@@ -144,9 +155,10 @@ class ReadLaterCollectionsFragment : Fragment() {
 
         ReadLaterCollectionsScreenContent(
             readLaterCollections = previewReadLaterCollections,
-            onCollectionClicked = {},
+            onCollectionClicked = { _, _ -> },
             onDeleteCollectionClicked = {}
         )
     }
+
 
 }

@@ -98,14 +98,19 @@ fun ReadLaterCollectionItem(
 @Composable
 fun ReadLaterCollectionsList(
     readLaterCollections: List<ReadLaterCollection>,
-    onCollectionItemClicked: (collectionId: Int) -> Unit,
+    onCollectionItemClicked: (collectionId: Int, collectionTitle: String) -> Unit,
     onDeleteCollectionClicked: (collectionId: Int) -> Unit
 ) {
     LazyColumn {
-        items(readLaterCollections) { collection ->
+        items(readLaterCollections) { collection: ReadLaterCollection ->
             ReadLaterCollectionItem(
                 readLaterCollection = collection,
-                onItemClicked = { onCollectionItemClicked.invoke(collection.collectionId) },
+                onItemClicked = {
+                    onCollectionItemClicked.invoke(
+                        collection.collectionId,
+                        collection.collectionTitle
+                    )
+                },
                 onDeleteCollectionClicked = { onDeleteCollectionClicked.invoke(collection.collectionId) },
                 firstThreeStoryImageUrls = collection.getThreeImageUrls() ?: emptyList()
             )
@@ -165,6 +170,7 @@ fun ReadLaterCollectionsListPreview() {
 
     ReadLaterCollectionsList(
         readLaterCollections = previewReadLaterCollections,
-        onCollectionItemClicked = {}
-    ) {}
+        onCollectionItemClicked = { _: Int, _: String -> },
+        onDeleteCollectionClicked = { }
+    )
 }

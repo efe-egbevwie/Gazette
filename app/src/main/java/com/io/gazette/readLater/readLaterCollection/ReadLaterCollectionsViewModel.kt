@@ -1,4 +1,4 @@
-package com.io.gazette.readLater.viewReadLater
+package com.io.gazette.readLater.readLaterCollection
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -47,6 +47,7 @@ class ReadLaterCollectionsViewModel @Inject constructor(private val readLaterRep
     }
 
 
+
     private fun updateScreenState(
         isLoading: Boolean? = null,
         readLaterCollections: List<ReadLaterCollection>? = null
@@ -64,4 +65,5 @@ class ReadLaterCollectionsViewModel @Inject constructor(private val readLaterRep
 sealed class ReadLaterCollectionsScreenEvent {
     object GetAllReadLaterCollections : ReadLaterCollectionsScreenEvent()
     data class DeleteReadLaterCollection(val collectionId: Int) : ReadLaterCollectionsScreenEvent()
+
 }

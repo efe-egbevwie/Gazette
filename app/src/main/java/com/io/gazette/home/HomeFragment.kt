@@ -45,6 +45,7 @@ import com.io.gazette.common.ui.components.NewsList
 import com.io.gazette.common.ui.theme.GazetteTheme
 import com.io.gazette.domain.models.NewsCategory
 import com.io.gazette.domain.models.NewsItem
+import com.io.gazette.utils.navigateSafelyWithAnimations
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -225,7 +226,7 @@ class HomeFragment : Fragment() {
 
     private fun navigateToDetailFragment(url: String) {
         val action = HomeFragmentDirections.actionHomeFragmentToDetailFragment(url)
-        findNavController().navigate(action)
+        findNavController().navigateSafelyWithAnimations(action)
     }
 
     private fun navigateToSaveStoryDialog(storyUrl: String, storyImageUrl: String? = null) {

@@ -35,10 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun onNavDestinationChanged(navController: NavController) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.detailFragment -> hideBottomBar()
-                else -> showBottomNav()
-            }
+            if (destination.id == R.id.homeFragment || destination.id == R.id.readLaterCollectionsFragment) showBottomNav() else hideBottomBar()
 
         }
     }

@@ -39,7 +39,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class AddNewReadingListFragment : BottomSheetDialogFragment() {
+class CreateNewReadLaterCollectionFragment : BottomSheetDialogFragment() {
 
     private val viewModel by viewModels<AddToReadLaterViewModel>()
     override fun onCreateView(
@@ -114,7 +114,7 @@ class AddNewReadingListFragment : BottomSheetDialogFragment() {
 
                     Spacer(modifier = Modifier.width(20.dp))
 
-                    ScreenTitleText(title = "Create List", modifier = Modifier.padding(top = 20.dp))
+                    ScreenTitleText(title = "Create Collection", modifier = Modifier.padding(top = 20.dp))
                 }
 
                 Spacer(modifier = Modifier.height(40.dp))

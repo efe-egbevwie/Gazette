@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -143,8 +144,9 @@ class AddToReadLaterCollectionDialogFragment : BottomSheetDialogFragment() {
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Text(
-                    text = "Create new Reading List",
+                    text = "Create new Collection",
                     fontSize = 21.sp,
+                    color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .padding(start = 16.dp, top = 10.dp)
                         .clickable {

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".readLater.viewReadLater.ReadLaterCollectionsFragment">
+    tools:context=".readLater.readLaterCollection.ReadLaterCollectionsFragment">
 
     <androidx.compose.ui.platform.ComposeView
         android:layout_width="match_parent"
