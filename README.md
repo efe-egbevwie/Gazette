@@ -5,44 +5,52 @@ a WebView.
 
 ## ScreenShots
 
-### Tablet Home screen day mode
-![Home Screen Light](screenshots/home_screen_tablet.png " Home scree  Light Mode")
-
-
-### Tablet Detail screen day mode
-![News detail Light](screenshots/news_detail_tablet.png "Detail screen Light")
-
-
+### Phone Home screen day mode
+![Home Screen screenshot day mode](screenshots/day/home_screen_day.png "Home screen day mode")
 
 ### Phone Home screen dark mode
-![Home Screen screenshot dark](screenshots/home_screen_dark.jpg "Home screen Dark") 
+![Home Screen dark mode](screenshots/night/home_screen_night.png "Home screen dark mode") 
+
+### Create collection
+![Create a collection](screenshots/day/create_collection_day.png "create collection")
+
+### Save story to collection
+![Save story](screenshots/day/save_story_day.png "save story to collection")
+
+### Delete story from  collection
+![Delete story](screenshots/day/delete_from_collection.png "delete from collection")
+
+### Browse read later collections
+![Browse collections](screenshots/day/read_later_day.png "browse read later collections")
 
 
+### Browse stories in  collections
+![Browse collection](screenshots/day/browse_collection_day.png "browse read later collection")
 
 
-### Phone Detail screen dark mode
-![News Detail Dark](screenshots/news_detail_dark.jpg "Detail screen Dark")
+### News detail
+![News detail](screenshots/day/news_detail_day.png "news detail")
+
 
 
 
 ## Architecture
 
-The app is a single module project built with MVVM and clean architecture.
+This app is a single module project with a single activity and multiple fragments.
+Navigation is done using the jetpack navigation library.
+Fragments serve as containers for composable screen content.
+Safe args is used to pass arguments between fragments.
+Jetpack view model holds each screen state in the form of a MutableStateFlow. Screens observe this flow
+and reacts to it's state changes, they also pass events to the view model which in turn manipulates the
+app data.
 
-## UI
-
-The app uses a mixture of Views and jetpack compose. Fragments host the content, the ui components
-are built with both Views(ViewPager2 and TabLayout) and compose (LazyColumn).
-
-## Navigation
-
-Tha app uses the jetpack navigation library with fragments
 
 ## Android components used
 
 * Views
-* Composable
-* ViewModel
+* Jetpack Compose
+* Room persistence library
+* Jetpack ViewModel
 * Compose ConstraintLayout
 * Kotlin Coroutines
 * Jetpack Navigation
@@ -51,16 +59,15 @@ Tha app uses the jetpack navigation library with fragments
 
 * Retrofit and OkHttp
 * Kotlinx serialization
-* Expandable Bottom bar
+* Expandable Bottom bar -  https://github.com/st235/ExpandableBottomBar
 
 ## Contribution
 
 To make a contribution, just make a pull-request.
 
 ## To-DO
+* Edit read later collection titles
 
-* Add Bookmarking feature with Room persistence
-* Integrate xml Theming with composables.
 
 ## License
 
