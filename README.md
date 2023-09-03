@@ -1,38 +1,41 @@
 # Gazette
 
-An Android application that fetches news from the New York Times APi and displays detail content in
-a WebView.
+An Android application that fetches news from different categories from the New York Times APi and
+saves them locally
 
 ## ScreenShots
 
 ### Phone Home screen day mode
-![Home Screen screenshot day mode](screenshots/day/home_screen_day.png "Home screen day mode")
+
+<img src=screenshots/day/home_screen_day.png width="20%" height="20%">
 
 ### Phone Home screen dark mode
-![Home Screen dark mode](screenshots/night/home_screen_night.png "Home screen dark mode") 
+
+<img src=screenshots/night/home_screen_night.png width="20%" height="20%">
 
 ### Create collection
-![Create a collection](screenshots/day/create_collection_day.png "create collection")
+
+<img src="screenshots/day/create_collection_day.png" width="20%" height="20%">
 
 ### Save story to collection
-![Save story](screenshots/day/save_story_day.png "save story to collection")
+
+<img src="screenshots/day/save_story_day.png" width="20%" height="20%">
 
 ### Delete story from  collection
-![Delete story](screenshots/day/delete_from_collection.png "delete from collection")
+
+<img src="screenshots/day/delete_from_collection.png" width="20%" height="20%">
 
 ### Browse read later collections
-![Browse collections](screenshots/day/read_later_day.png "browse read later collections")
 
+<img src="screenshots/day/read_later_day.png" width="20%" height="20%">
 
 ### Browse stories in  collections
-![Browse collection](screenshots/day/browse_collection_day.png "browse read later collection")
 
+<img src="screenshots/day/browse_collection_day.png" width="20%" height="20%">
 
 ### News detail
-![News detail](screenshots/day/news_detail_day.png "news detail")
 
-
-
+<img src="screenshots/day/news_detail_day.png" width="20%" height="20%">
 
 ## Architecture
 
@@ -40,10 +43,11 @@ This app is a single module project with a single activity and multiple fragment
 Navigation is done using the jetpack navigation library.
 Fragments serve as containers for composable screen content.
 Safe args is used to pass arguments between fragments.
-Jetpack view model holds each screen state in the form of a MutableStateFlow. Screens observe this flow
-and reacts to it's state changes, they also pass events to the view model which in turn manipulates the
+Jetpack view model holds each screen state in the form of a MutableStateFlow. Screens observe this
+flow
+and reacts to it's state changes, they also pass events to the view model which in turn manipulates
+the
 app data.
-
 
 ## Android components used
 
@@ -66,8 +70,8 @@ app data.
 To make a contribution, just make a pull-request.
 
 ## To-DO
-* Edit read later collection titles
 
+* Edit read later collection titles
 
 ## License
 
