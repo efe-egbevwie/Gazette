@@ -90,7 +90,7 @@ class NytRepository @Inject constructor(
                 NewsCategory.SPORTS -> nytApi.getTopSportsNews()
             }
 
-            val newsFromApiResults = newsFromApi.results?.map { it.toNewsEntity() }
+            val newsFromApiResults = newsFromApi.results?.map { it.toNewsEntity(fallBackSection = section.name.lowercase()) }
             if (newsFromApiResults?.isNotEmpty() == true) saveNewsToDb(newsFromApiResults)
         } catch (e: Exception) {
             Timber.e("exception getting news from API: $e")

@@ -5,8 +5,6 @@ import com.io.gazette.data.local.model.NewsEntity
 import kotlinx.serialization.*
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.*
-import kotlinx.serialization.json.*
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
 
 @Serializable
@@ -220,13 +218,26 @@ enum class Type(val value: String) {
     }
 }
 
+/**
+ * Maps a news result item from the NYT API to a NewsEntity.
+ * @param fallBackSection: A section to save the news item with in case  the API returns no section
+ *
+ * */
+fun Result.toNewsEntity(fallBackSection: String): NewsEntity {
 
-fun Result.toNewsEntity() = NewsEntity(
-    title = this.title.orEmpty(),
-    abstract = this.abstract.orEmpty(),
-    url = this.url.orEmpty(),
-    section = this.section.orEmpty(),
-    photoUrl = this.multimedia?.find { it.url != null }?.url.orEmpty(),
-    writer = this.byline.orEmpty(),
-    publishedDate = OffsetDateTime.parse(this.createdDate).toLocalDateTime()
-)
+    var sectionToStore = this.section
+
+    if (this.section.isNullOrBlank()) {
+        sectionToStore = fallBackSection
+    }
+
+    return NewsEntity(
+        title = title.orEmpty(),
+        abstract = abstract.orEmpty(),
+        url = url.orEmpty(),
+        section = sectionToStore.orEmpty(),
+        photoUrl = multimedia?.find { it.url != null }?.url.orEmpty(),
+        writer = byline.orEmpty(),
+        publishedDate = OffsetDateTime.parse(createdDate).toLocalDateTime()
+    )
+}

@@ -15,15 +15,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.IconButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowUpward
-import androidx.compose.material.icons.outlined.ArrowCircleUp
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -45,12 +42,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.viewpager2.widget.ViewPager2
 import coil.ImageLoader
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.request.ImageRequest
-import com.google.android.material.tabs.TabLayout
 import com.io.gazette.R
 import com.io.gazette.common.ui.Pixel6APreview
 import com.io.gazette.common.ui.components.LoadingScreen
@@ -63,14 +58,10 @@ import com.io.gazette.domain.models.NewsItem
 import com.io.gazette.utils.navigateSafelyWithAnimations
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-
-    private lateinit var viewPager: ViewPager2
-    private lateinit var tabLayout: TabLayout
 
     private val viewModel by viewModels<HomeViewModel>()
     private lateinit var imageLoader: ImageLoader
@@ -160,7 +151,6 @@ class HomeFragment : Fragment() {
 
 
         LaunchedEffect(key1 = state.newsContent) {
-            Timber.i("can scroll to top -> $newsListCanScrollToTop")
             if (newsListCanScrollToTop) scrollListToTop()
         }
 
