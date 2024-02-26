@@ -4,11 +4,13 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-sealed class NewsCategory : Parcelable {
+enum class NewsCategory : Parcelable {
+    WORLD,
+    BUSINESS,
+    HEALTH,
+    SPORTS;
 
-    object World : NewsCategory()
-
-    object Business : NewsCategory()
-    object Health : NewsCategory()
-    object Sports : NewsCategory()
+    companion object{
+        val allCategories:List<NewsCategory> = NewsCategory.values().toList()
+    }
 }

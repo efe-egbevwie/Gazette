@@ -15,7 +15,7 @@ data class NewsItem(
     val readLaterCollectionId: Int? = null
 ) {
 
-    fun getFormattedDateTime() =
+    fun getFormattedDateTime(): String =
         this.publishedDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d, uuuu, HH:mm a"))
 
     fun isValid(): Boolean = this.title.isNotBlank() and this.abstract.isNotBlank()

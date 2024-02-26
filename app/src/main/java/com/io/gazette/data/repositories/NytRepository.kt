@@ -31,18 +31,18 @@ class NytRepository @Inject constructor(
             }
 
             coroutineScope {
-                launch { getNewsFromApi(section = NewsCategory.World) }
-                launch { getNewsFromApi(section = NewsCategory.Business) }
-                launch { getNewsFromApi(section = NewsCategory.Health) }
-                launch { getNewsFromApi(section = NewsCategory.Sports) }
+                launch { getNewsFromApi(section = NewsCategory.WORLD) }
+                launch { getNewsFromApi(section = NewsCategory.BUSINESS) }
+                launch { getNewsFromApi(section = NewsCategory.HEALTH) }
+                launch { getNewsFromApi(section = NewsCategory.SPORTS) }
             }
 
 
             val section = when (category) {
-                is NewsCategory.World -> "world"
-                is NewsCategory.Business -> "business"
-                is NewsCategory.Health -> "health"
-                is NewsCategory.Sports -> "sports"
+                NewsCategory.WORLD -> "world"
+                NewsCategory.BUSINESS -> "business"
+                NewsCategory.HEALTH -> "health"
+                NewsCategory.SPORTS -> "sports"
             }
 
             GetDataResult.Success(data = getNewsFromDb(section = section))
@@ -56,10 +56,10 @@ class NytRepository @Inject constructor(
         return try {
 
             val section = when (category) {
-                is NewsCategory.World -> "world"
-                is NewsCategory.Business -> "business"
-                is NewsCategory.Health -> "health"
-                is NewsCategory.Sports -> "sports"
+                NewsCategory.WORLD -> "world"
+                NewsCategory.BUSINESS -> "business"
+                NewsCategory.HEALTH -> "health"
+                NewsCategory.SPORTS -> "sports"
             }
 
             val newsFromDb = getNewsFromDb(section)
@@ -84,10 +84,10 @@ class NytRepository @Inject constructor(
     private suspend fun getNewsFromApi(section: NewsCategory) {
         try {
             val newsFromApi = when (section) {
-                NewsCategory.World -> nytApi.getTopWorldNews()
-                NewsCategory.Business -> nytApi.getTopBusinessNews()
-                NewsCategory.Health -> nytApi.getTopHealthNews()
-                NewsCategory.Sports -> nytApi.getTopSportsNews()
+                NewsCategory.WORLD -> nytApi.getTopWorldNews()
+                NewsCategory.BUSINESS -> nytApi.getTopBusinessNews()
+                NewsCategory.HEALTH -> nytApi.getTopHealthNews()
+                NewsCategory.SPORTS -> nytApi.getTopSportsNews()
             }
 
             val newsFromApiResults = newsFromApi.results?.map { it.toNewsEntity() }

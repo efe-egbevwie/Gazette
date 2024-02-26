@@ -5,29 +5,42 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowUpward
+import androidx.compose.material.icons.outlined.ArrowCircleUp
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -38,16 +51,17 @@ import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.request.ImageRequest
 import com.google.android.material.tabs.TabLayout
-import com.io.gazette.HomeViewModel
 import com.io.gazette.R
+import com.io.gazette.common.ui.Pixel6APreview
+import com.io.gazette.common.ui.components.LoadingScreen
 import com.io.gazette.common.ui.components.NewsCategories
 import com.io.gazette.common.ui.components.NewsList
+import com.io.gazette.common.ui.components.sampleNewsList
 import com.io.gazette.common.ui.theme.GazetteTheme
 import com.io.gazette.domain.models.NewsCategory
 import com.io.gazette.domain.models.NewsItem
 import com.io.gazette.utils.navigateSafelyWithAnimations
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -83,11 +97,10 @@ class HomeFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.state.collect { state ->
-                state.newsContent?.collect { newsItems ->
-                    newsItems.forEach { newsItem ->
-                        cacheImages(newsItem.photoUrl)
-                    }
+                state.newsContent.forEach { newsItem ->
+                    cacheImages(newsItem.photoUrl)
                 }
+
             }
         }
 
@@ -106,7 +119,10 @@ class HomeFragment : Fragment() {
 
                 setContent {
                     GazetteTheme {
-                        NewsScreen()
+                        Surface {
+                            NewsScreen()
+                        }
+
                     }
                 }
             }
@@ -118,109 +134,156 @@ class HomeFragment : Fragment() {
     @Composable
     fun NewsScreen() {
 
-        LaunchedEffect(key1 = 1) {
-            viewModel.getNews(NewsCategory.World)
-        }
-
-        val state = viewModel.state.collectAsState()
+        val state by viewModel.state.collectAsState()
         val refreshState =
             rememberPullRefreshState(
-                refreshing = state.value.isRefreshing,
+                refreshing = state.isRefreshing,
                 onRefresh = {
-                    viewModel.refreshNews()
+                    viewModel.onEvent(HomeScreenEvent.RefreshNews)
                 }
             )
 
+        val newsListState: LazyListState = state.newsListState
+        val newsListCanScrollToTop: Boolean by remember {
+            derivedStateOf {
+                newsListState.firstVisibleItemIndex > 0
+            }
+        }
 
-        Surface {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .pullRefresh(
-                        state = refreshState,
-                        enabled = true
+        val scope = rememberCoroutineScope()
+
+        fun scrollListToTop(){
+            scope.launch {
+                state.newsListState.animateScrollToItem(0)
+            }
+        }
+
+
+        LaunchedEffect(key1 = state.newsContent) {
+            Timber.i("can scroll to top -> $newsListCanScrollToTop")
+            if (newsListCanScrollToTop) scrollListToTop()
+        }
+
+
+        NewsScreenContent(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            newsList = state.newsContent,
+            isLoadingNews = state.isLoading,
+            onCategorySelected = { category: NewsCategory ->
+                viewModel.onEvent(event = HomeScreenEvent.UpdateCategory(newCategory = category))
+            },
+            refreshState = refreshState,
+            isRefreshingNews = state.isRefreshing,
+            selectedCategory = state.selectedCategory,
+            newsListState = state.newsListState,
+            onScrollListToTopClicked = {
+                scrollListToTop()
+
+            },
+            scrollListToTopButtonVisible = newsListCanScrollToTop
+        )
+    }
+
+
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    fun NewsScreenContent(
+        modifier: Modifier = Modifier,
+        newsList: List<NewsItem>,
+        isLoadingNews: Boolean,
+        isRefreshingNews: Boolean,
+        selectedCategory: NewsCategory,
+        onCategorySelected: (category: NewsCategory) -> Unit,
+        onScrollListToTopClicked: () -> Unit,
+        scrollListToTopButtonVisible: Boolean,
+        refreshState: PullRefreshState,
+        newsListState: LazyListState
+    ) {
+
+        Column(
+            modifier = modifier
+                .pullRefresh(
+                    state = refreshState,
+                    enabled = true
+                ),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+
+            Text(
+                text = "Latest Stories",
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            NewsCategories(
+                selectedCategory = selectedCategory,
+                onCategorySelected = onCategorySelected
+            )
+
+            AnimatedVisibility(visible = isLoadingNews) {
+                LoadingScreen(modifier = Modifier.fillMaxSize())
+            }
+
+            AnimatedVisibility(visible = isLoadingNews.not() && newsList.isNotEmpty()) {
+                Box(modifier = Modifier) {
+
+                    NewsContent(
+                        news = newsList,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .align(Alignment.Center),
+                        newsListState = newsListState
                     )
-            ) {
 
-                Text(
-                    text = "Latest Stories",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 23.sp,
-                    modifier = Modifier.padding(start = 16.dp, top = 20.dp)
-                )
+                    PullRefreshIndicator(
+                        refreshing = isRefreshingNews,
+                        state = refreshState,
+                        modifier = Modifier.align(Alignment.TopCenter)
+                    )
 
-                NewsCategories(
-                    onCategorySelected = { category ->
-                        viewModel.getNews(category)
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-
-                if (state.value.isLoading) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    }
-                } else {
-                    Box(modifier = Modifier) {
-
-                        NewsContent(
-                            isLoading = state.value.isLoading,
-                            news = state.value.newsContent,
-                            errorMessage = state.value.error?.getContentIfNotHandled()?.message,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-
-                        PullRefreshIndicator(
-                            refreshing = state.value.isRefreshing,
-                            refreshState,
-                            modifier = Modifier.align(Alignment.TopCenter)
-                        )
-
-
+                    if (scrollListToTopButtonVisible) {
+                        IconButton(
+                            onClick = { onScrollListToTopClicked() }, modifier = Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(20.dp)
+                        ) {
+                            Icon(
+                                painterResource(id = R.drawable.arrow_up_circle),
+                                contentDescription = "Scroll List Upwards",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier
+                                    .size(48.dp)
+                            )
+                        }
                     }
 
 
                 }
-
 
             }
 
         }
+
     }
 
     @Composable
     fun NewsContent(
-        isLoading: Boolean = false,
-        news: Flow<List<NewsItem>>? = null,
-        errorMessage: String? = null,
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
+        news: List<NewsItem>,
+        newsListState: LazyListState
     ) {
-
-        Timber.i("is loading: $isLoading")
-
-
-        Column(modifier = Modifier.fillMaxSize()) {
-
-            val newsContent = news?.collectAsState(initial = emptyList())
-
-            if (newsContent?.value?.isNotEmpty() == true) {
-
-                NewsList(
-                    newsItems = newsContent.value,
-                    onItemClick = { newsUrl ->
-                        navigateToDetailFragment(newsUrl)
-                    },
-                    onSaveStoryButtonClicked = { storyUrl, storyImageUrl ->
-                        navigateToSaveStoryDialog(storyUrl, storyImageUrl)
-                    }
-                )
-            }
-
-
-        }
-
+        NewsList(
+            modifier = modifier,
+            newsItems = news,
+            onItemClick = { newsUrl ->
+                navigateToDetailFragment(newsUrl)
+            },
+            onSaveStoryButtonClicked = { storyUrl, storyImageUrl ->
+                navigateToSaveStoryDialog(storyUrl, storyImageUrl)
+            },
+            listState = newsListState
+        )
 
     }
 
@@ -247,5 +310,28 @@ class HomeFragment : Fragment() {
         imageLoader.enqueue(imageRequest)
     }
 
+
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    @PreviewLightDark
+    @Pixel6APreview
+    fun NewScreenContentPreview() {
+        GazetteTheme {
+            Surface {
+                NewsScreenContent(
+                    newsList = sampleNewsList,
+                    isLoadingNews = false,
+                    isRefreshingNews = false,
+                    onCategorySelected = {},
+                    refreshState = rememberPullRefreshState(refreshing = false, onRefresh = { }),
+                    selectedCategory = NewsCategory.WORLD,
+                    newsListState = rememberLazyListState(),
+                    onScrollListToTopClicked = {},
+                    scrollListToTopButtonVisible = true
+                )
+            }
+
+        }
+    }
 
 }
