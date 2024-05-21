@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Icon
@@ -25,7 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -36,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -143,61 +142,63 @@ class HomeFragment : Fragment() {
 
         val scope = rememberCoroutineScope()
 
-        fun scrollListToTop(){
+        fun scrollListToTop() {
             scope.launch {
                 state.newsListState.animateScrollToItem(0)
             }
         }
 
-
-        LaunchedEffect(key1 = state.newsContent) {
-            if (newsListCanScrollToTop) scrollListToTop()
-        }
-
-
-        NewsScreenContent(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            newsList = state.newsContent,
-            isLoadingNews = state.isLoading,
-            onCategorySelected = { category: NewsCategory ->
-                viewModel.onEvent(event = HomeScreenEvent.UpdateCategory(newCategory = category))
-            },
-            refreshState = refreshState,
-            isRefreshingNews = state.isRefreshing,
-            selectedCategory = state.selectedCategory,
-            newsListState = state.newsListState,
-            onScrollListToTopClicked = {
-                scrollListToTop()
+                .pullRefresh(state = refreshState, enabled = true)
+        ) {
 
-            },
-            scrollListToTopButtonVisible = newsListCanScrollToTop
-        )
+
+            NewsScreenContent(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                newsList = state.newsContent,
+                isLoadingNews = state.isLoading,
+                selectedCategory = state.selectedCategory,
+                onCategorySelected = { category: NewsCategory ->
+                    viewModel.onEvent(event = HomeScreenEvent.UpdateCategory(newCategory = category))
+                    scrollListToTop()
+                },
+                onScrollListToTopClicked = {
+                    scrollListToTop()
+
+                },
+                scrollListToTopButtonVisible = newsListCanScrollToTop,
+                newsListState = state.newsListState
+            )
+
+            PullRefreshIndicator(
+                refreshing = state.isRefreshing,
+                state = refreshState,
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
+
+        }
+
     }
 
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun NewsScreenContent(
         modifier: Modifier = Modifier,
         newsList: List<NewsItem>,
         isLoadingNews: Boolean,
-        isRefreshingNews: Boolean,
         selectedCategory: NewsCategory,
         onCategorySelected: (category: NewsCategory) -> Unit,
         onScrollListToTopClicked: () -> Unit,
         scrollListToTopButtonVisible: Boolean,
-        refreshState: PullRefreshState,
         newsListState: LazyListState
     ) {
 
         Column(
-            modifier = modifier
-                .pullRefresh(
-                    state = refreshState,
-                    enabled = true
-                ),
+            modifier = modifier,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
 
@@ -226,11 +227,6 @@ class HomeFragment : Fragment() {
                         newsListState = newsListState
                     )
 
-                    PullRefreshIndicator(
-                        refreshing = isRefreshingNews,
-                        state = refreshState,
-                        modifier = Modifier.align(Alignment.TopCenter)
-                    )
 
                     if (scrollListToTopButtonVisible) {
                         IconButton(
@@ -301,7 +297,6 @@ class HomeFragment : Fragment() {
     }
 
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     @PreviewLightDark
     @Pixel6APreview
@@ -311,13 +306,11 @@ class HomeFragment : Fragment() {
                 NewsScreenContent(
                     newsList = sampleNewsList,
                     isLoadingNews = false,
-                    isRefreshingNews = false,
-                    onCategorySelected = {},
-                    refreshState = rememberPullRefreshState(refreshing = false, onRefresh = { }),
                     selectedCategory = NewsCategory.WORLD,
-                    newsListState = rememberLazyListState(),
+                    onCategorySelected = {},
                     onScrollListToTopClicked = {},
-                    scrollListToTopButtonVisible = true
+                    scrollListToTopButtonVisible = true,
+                    newsListState = rememberLazyListState()
                 )
             }
 
