@@ -18,7 +18,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("GazetteSigningKey.jks")
+            storeFile file("../keystore.jks")
             storePassword System.getenv("GAZETTE_KEYSTORE_PASSWORD")
             keyAlias System.getenv("GAZETTE_KEY_ALIAS")
             keyPassword System.getenv("GAZETTE_KEYSTORE_PASSWORD")

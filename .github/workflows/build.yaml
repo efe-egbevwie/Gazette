@@ -32,7 +32,7 @@ jobs:
 
         run: | 
           echo "$ENCODED_STRING" > keystore-base64.txt 
-          base64 -d keystore-base64.txt > $GAZETTE_SIGNING_KEY
+          base64 -d keystore-base64.txt > keystore.jks
 
 
       - name: Make gradlew executable
@@ -41,12 +41,10 @@ jobs:
       #2
       - name: Build Release apk
         env:
-          GAZETTE_SIGNING_KEY: ${{ secrets.GAZETTE_SIGNING_KEY }}
           GAZETTE_KEY_ALIAS: ${{ secrets.GAZETTE_KEY_ALIAS }}
           GAZETTE_KEYSTORE_PASSWORD: ${{ secrets.GAZETTE_KEYSTORE_PASSWORD }}
           GAZETTE_NYT_API_KEY: ${{ secrets.GAZETTE_NYT_API_KEY  }}
         run: |
-          export GAZETTE_SIGNING_KEY=${{ secrets.GAZETTE_SIGNING_KEY }}
           export GAZETTE_KEYSTORE_PASSWORD=${{ secrets.GAZETTE_KEYSTORE_PASSWORD }}
           export GAZETTE_KEY_ALIAS=${{ secrets.GAZETTE_KEY_ALIAS }}
           ./gradlew assembleRelease
