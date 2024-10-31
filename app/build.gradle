@@ -10,8 +10,6 @@ plugins {
     id 'kotlin-parcelize'
 }
 
-def localProperties = new Properties()
-localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
 
 android {
@@ -56,8 +54,7 @@ android {
 
         buildTypes {
             debug {
-                buildConfigField "String", "NYT_API_KEY", localProperties.getProperty('NEW_YORK_TIMES_API_KEY')
-
+                buildConfigField "String", "NYT_API_KEY", System.getenv("GAZETTE_NYT_API_KEY")
             }
             release {
                 minifyEnabled true
