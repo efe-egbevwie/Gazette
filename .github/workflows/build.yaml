@@ -30,7 +30,9 @@ jobs:
           ENCODED_STRING: ${{ secrets.GAZETTE_SIGNING_KEY_BASE64 }}
           GAZETTE_SIGNING_KEY: ${{ secrets.GazetteSigningKey }}
 
-        run: echo "$ENCODED_STRING" | base64 --decode > $GAZETTE_SIGNING_KEY
+        run: | 
+          echo "$ENCODED_STRING" > keystore-base64.txt 
+          base64 -d keystore-base64.txt > $GAZETTE_SIGNING_KEY
 
 
       - name: Make gradlew executable
