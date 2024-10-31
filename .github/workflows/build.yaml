@@ -33,6 +33,8 @@ jobs:
         run: echo "$ENCODED_STRING" | base64 --decode > $SIGNING_KEY_STORE_PATH
 
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
 
       #2
       - name: Build Release apk
@@ -41,7 +43,9 @@ jobs:
           SIGNING_KEY_ALIAS: ${{ secrets.GAZETTE_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.GAZETTE_KEYSTORE_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.GAZETTE_KEYSTORE_PASSWORD }}
-        run: chmod +x ./gradlew | ./gradlew assembleRelease
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleRelease
 
       #3
       - name: Upload Release Build to Artifacts
