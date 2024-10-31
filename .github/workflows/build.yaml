@@ -46,6 +46,9 @@ jobs:
           GAZETTE_KEYSTORE_PASSWORD: ${{ secrets.GAZETTE_KEYSTORE_PASSWORD }}
           GAZETTE_NYT_API_KEY: ${{ secrets.GAZETTE_NYT_API_KEY  }}
         run: |
+          export GAZETTE_SIGNING_KEY=GazetteSigningKey.jks
+          export GAZETTE_KEYSTORE_PASSWORD=${{ secrets.GAZETTE_KEYSTORE_PASSWORD }}
+          export GAZETTE_KEY_ALIAS=${{ secrets.GAZETTE_KEY_ALIAS }}
           ./gradlew assembleRelease
 
       #3
