@@ -28,9 +28,9 @@ jobs:
       - name: Decode Keystore
         env:
           ENCODED_STRING: ${{ secrets.GAZETTE_SIGNING_KEY_BASE64 }}
-          SIGNING_KEY_STORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
+          GAZETTE_SIGNING_KEY: ${{ secrets.GazetteSigningKey }}
 
-        run: echo "$ENCODED_STRING" | base64 --decode > $SIGNING_KEY_STORE_PATH
+        run: echo "$ENCODED_STRING" | base64 --decode > $GAZETTE_SIGNING_KEY
 
 
       - name: Make gradlew executable
@@ -39,10 +39,9 @@ jobs:
       #2
       - name: Build Release apk
         env:
-          SIGNING_KEY_STORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
-          SIGNING_KEY_ALIAS: ${{ secrets.GAZETTE_KEY_ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.GAZETTE_KEYSTORE_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.GAZETTE_KEYSTORE_PASSWORD }}
+          GazetteSigningKey: ${{ secrets.GazetteSigningKey }}
+          GAZETTE_KEY_ALIAS: ${{ secrets.GAZETTE_KEY_ALIAS }}
+          GAZETTE_KEYSTORE_PASSWORD: ${{ secrets.GAZETTE_KEYSTORE_PASSWORD }}
         run: |
           chmod +x ./gradlew
           ./gradlew assembleRelease
