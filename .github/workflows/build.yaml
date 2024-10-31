@@ -41,7 +41,7 @@ jobs:
           SIGNING_KEY_ALIAS: ${{ secrets.GAZETTE_KEY_ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.GAZETTE_KEYSTORE_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.GAZETTE_KEYSTORE_PASSWORD }}
-        run: ./gradlew assembleRelease
+        run: chmod +x ./gradlew | ./gradlew assembleRelease
 
       #3
       - name: Upload Release Build to Artifacts
