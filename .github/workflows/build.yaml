@@ -28,7 +28,7 @@ jobs:
       - name: Decode Keystore
         env:
           ENCODED_STRING: ${{ secrets.GAZETTE_SIGNING_KEY_BASE64 }}
-          GAZETTE_SIGNING_KEY: ${{ secrets.GazetteSigningKey }}
+          GAZETTE_SIGNING_KEY: ${{ secrets.GAZETTE_SIGNING_KEY }}
 
         run: | 
           echo "$ENCODED_STRING" > keystore-base64.txt 
@@ -41,7 +41,7 @@ jobs:
       #2
       - name: Build Release apk
         env:
-          GazetteSigningKey: ${{ secrets.GazetteSigningKey }}
+          GAZETTE_SIGNING_KEY: ${{ secrets.GAZETTE_SIGNING_KEY }}
           GAZETTE_KEY_ALIAS: ${{ secrets.GAZETTE_KEY_ALIAS }}
           GAZETTE_KEYSTORE_PASSWORD: ${{ secrets.GAZETTE_KEYSTORE_PASSWORD }}
         run: |
