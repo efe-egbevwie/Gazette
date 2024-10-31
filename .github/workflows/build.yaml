@@ -1,0 +1,61 @@
+on:
+  push:
+    branches: main
+    tags:
+      - v*
+
+  release_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup JAVA 22
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: 22
+
+      - name: Cache Gradle and wrapper
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+
+      #1
+      - name: Decode Keystore
+        env:
+          ENCODED_STRING: ${{ secrets.GAZETTE_SIGNING_KEY_BASE64 }}
+          SIGNING_KEY_STORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
+
+        run: |
+          echo $ENCODED_STRING > keystore-b64.txt
+          base64 -d keystore-b64.txt > $SIGNING_KEY_STORE_PATH
+
+      #2
+      - name: Build Release apk
+        env:
+          SIGNING_KEY_STORE_PATH: ${{ secrets.SIGNING_KEY_STORE_PATH }}
+          SIGNING_KEY_ALIAS: ${{ secrets.GAZETTE_KEY_ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.GAZETTE_KEYSTORE_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.GAZETTE_KEYSTORE_PASSWORD }}
+        run: ./gradlew assembleRelease
+
+      #3
+      - name: Upload Release Build to Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-artifacts
+          paths: |
+            app/build/outputs/apk/release/
+            app/build/outputs/bundle/release/
+      #4
+      - name: Create Github Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          prerelease: true
+          files: |
+            app/build/outputs/apk/release/app-release.apk
