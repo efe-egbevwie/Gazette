@@ -46,7 +46,6 @@ jobs:
           GAZETTE_KEYSTORE_PASSWORD: ${{ secrets.GAZETTE_KEYSTORE_PASSWORD }}
           GAZETTE_NYT_API_KEY: ${{ secrets.GAZETTE_NYT_API_KEY  }}
         run: |
-          chmod +x ./gradlew
           ./gradlew assembleRelease
 
       #3
