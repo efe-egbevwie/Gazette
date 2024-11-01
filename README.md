@@ -3,6 +3,9 @@
 An Android application that fetches news from different categories from the New York Times APi and
 saves them locally
 
+## Installation
+Builds are available under the github repository releases 
+
 ## ScreenShots
 
 ### Phone Home screen day mode
