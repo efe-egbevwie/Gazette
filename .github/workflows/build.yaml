@@ -1,6 +1,5 @@
 on:
   push:
-    branches: main
     tags:
       - v*
 jobs:
@@ -53,6 +52,13 @@ jobs:
       - name: Upload Release Build to Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: release-artifacts
-          path: |
-            app/build/outputs/apk/release/*.apk
+          name: Builds
+          path: app/build/outputs/apk/release/*.apk
+          if-no-files-found: warn
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          title: "Gazette releases"
+          files: app/build/outputs/apk/release/*.apk
