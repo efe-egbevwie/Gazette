@@ -77,7 +77,6 @@ class AddToReadLaterCollectionDialogFragment : BottomSheetDialogFragment() {
         val readingList =
             viewModel.addToReadLaterCollectionScreenState.collectAsState()
 
-
         AddStoryToReadLaterCollectionDialog(
             storyUrl = args.storyUrl,
             storyImageUrl = args.storyImageUrl,

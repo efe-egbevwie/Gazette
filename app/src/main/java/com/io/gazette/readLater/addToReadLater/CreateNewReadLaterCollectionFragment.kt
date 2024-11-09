@@ -7,14 +7,11 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -85,68 +82,59 @@ class CreateNewReadLaterCollectionFragment : BottomSheetDialogFragment() {
     }
 
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun CreateNewReadingListScreenContent(
         onReadingListTitleChanged: (title: String) -> Unit,
         onCreateListButtonClicked: () -> Unit,
-        onCloseScreenButtonClicked: () -> Unit
+        onCloseScreenButtonClicked: () -> Unit,
+        modifier: Modifier = Modifier
     ) {
 
         var readingListTitle by rememberSaveable {
             mutableStateOf("")
         }
 
-        Surface(modifier = Modifier.padding(bottom = 20.dp)) {
-
-            Column(
-                modifier = Modifier.fillMaxSize(),
+        Column(
+            modifier = modifier,
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .fillMaxWidth()
             ) {
-                Row(
-                    modifier = Modifier
-                        .padding(top = 10.dp)
-                        .fillMaxWidth()
-                ) {
 
-                    CloseScreenButton {
-                        onCloseScreenButtonClicked.invoke()
-                    }
-
-                    Spacer(modifier = Modifier.width(20.dp))
-
-                    ScreenTitleText(title = "Create Collection", modifier = Modifier.padding(top = 20.dp))
-                }
-
-                Spacer(modifier = Modifier.height(40.dp))
-
-                OutlinedTextField(
-                    value = readingListTitle,
-                    onValueChange = { newTitle ->
-                        readingListTitle = newTitle
-                        onReadingListTitleChanged.invoke(newTitle)
-                    },
-                    label = {
-                        Text(text = "Title")
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth(0.75f)
-                        .align(Alignment.CenterHorizontally)
-                )
-
-
-                Spacer(modifier = Modifier.height(40.dp))
-
-
-                GazetteButton(
-                    buttonTitle = "Create",
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = { onCreateListButtonClicked.invoke() }
-                )
-
+                CloseScreenButton { onCloseScreenButtonClicked.invoke() }
+                Spacer(modifier = Modifier.width(20.dp))
+                ScreenTitleText(title = "Create Collection")
             }
 
+            Spacer(modifier = Modifier.height(40.dp))
 
+            OutlinedTextField(
+                value = readingListTitle,
+                onValueChange = { newTitle ->
+                    readingListTitle = newTitle
+                    onReadingListTitleChanged.invoke(newTitle)
+                },
+                label = {
+                    Text(text = "Title")
+                },
+                modifier = Modifier
+                    .fillMaxWidth(0.75f)
+                    .align(Alignment.CenterHorizontally)
+            )
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            GazetteButton(
+                buttonTitle = "Create",
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                onClick = { onCreateListButtonClicked.invoke() }
+            )
+            Spacer(modifier = Modifier.height(20.dp))
         }
+
     }
 
 
@@ -154,16 +142,13 @@ class CreateNewReadLaterCollectionFragment : BottomSheetDialogFragment() {
     @Preview(device = "id:pixel_7", showSystemUi = true, showBackground = true)
     fun CreateNewReadingListScreenPreview() {
         GazetteTheme {
-
             CreateNewReadingListScreenContent(
                 onReadingListTitleChanged = {},
                 onCreateListButtonClicked = {},
-                onCloseScreenButtonClicked = {})
+                onCloseScreenButtonClicked = {}
+            )
         }
-
     }
-
-
 }
 
 

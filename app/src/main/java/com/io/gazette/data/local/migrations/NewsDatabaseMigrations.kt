@@ -4,8 +4,8 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 val MIGRATION_2_3 = object : Migration(2, 3) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL(
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
             "CREATE TABLE `new_news` (" +
                     "`url` TEXT NOT NULL," +
                     "`title` TEXT NOT NULL, " +
@@ -16,9 +16,7 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
                     "`published_date` TEXT," +
                     "PRIMARY KEY(`url`) )"
         )
-
-
-        database.execSQL(
+        db.execSQL(
             "INSERT OR IGNORE INTO new_news(title, " +
                     "abstract," +
                     "section," +
@@ -28,25 +26,17 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
                     "published_date) " +
                     "SELECT title, abstract, section, url, photoUrl, writer, publishedDate FROM news"
         )
-
-        database.execSQL("DROP table news")
-
-        database.execSQL("ALTER TABLE new_news RENAME TO news")
-
-
+        db.execSQL("DROP table news")
+        db.execSQL("ALTER TABLE new_news RENAME TO news")
     }
-
 }
 
 val MIGRATION_3_4 = object : Migration(3, 4) {
-    override fun migrate(database: SupportSQLiteDatabase) {
-        database.execSQL(
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
             "CREATE TABLE IF NOT EXISTS `reading_list` (" +
                     "`list_id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
                     "`list_name` TEXT NOT NULL)"
-
-
         )
     }
-
 }

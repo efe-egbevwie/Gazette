@@ -154,7 +154,6 @@ class HomeViewModel @Inject constructor(private val newsRepository: NytRepositor
 
 sealed class HomeScreenEvent {
     data class GetNews(val category: NewsCategory) : HomeScreenEvent()
-
     data class UpdateCategory(val newCategory: NewsCategory) : HomeScreenEvent()
-    object RefreshNews : HomeScreenEvent()
+    data object RefreshNews : HomeScreenEvent()
 }

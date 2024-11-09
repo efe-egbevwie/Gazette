@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Icon
@@ -34,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.PreviewDynamicColors
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -60,16 +60,11 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-
-
     private val viewModel by viewModels<HomeViewModel>()
     private lateinit var imageLoader: ImageLoader
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
         imageLoader = ImageLoader(requireContext())
             .newBuilder()
             .memoryCache {
@@ -106,7 +101,6 @@ class HomeFragment : Fragment() {
                 setViewCompositionStrategy(
                     ViewCompositionStrategy.Default
                 )
-
                 setContent {
                     GazetteTheme {
                         Surface {
@@ -123,9 +117,8 @@ class HomeFragment : Fragment() {
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun NewsScreen() {
-
-        val state by viewModel.state.collectAsState()
-        val refreshState =
+        val state: HomeViewModel.HomeScreenState by viewModel.state.collectAsState()
+        val refreshState: PullRefreshState =
             rememberPullRefreshState(
                 refreshing = state.isRefreshing,
                 onRefresh = {
@@ -151,10 +144,7 @@ class HomeFragment : Fragment() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .pullRefresh(state = refreshState, enabled = true)
         ) {
-
-
             NewsScreenContent(
                 modifier = Modifier
                     .fillMaxSize()
@@ -168,23 +158,17 @@ class HomeFragment : Fragment() {
                 },
                 onScrollListToTopClicked = {
                     scrollListToTop()
-
                 },
                 scrollListToTopButtonVisible = newsListCanScrollToTop,
+                refreshState = refreshState,
+                isRefreshing = state.isRefreshing,
                 newsListState = state.newsListState
             )
-
-            PullRefreshIndicator(
-                refreshing = state.isRefreshing,
-                state = refreshState,
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
-
         }
-
     }
 
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun NewsScreenContent(
         modifier: Modifier = Modifier,
@@ -194,6 +178,8 @@ class HomeFragment : Fragment() {
         onCategorySelected: (category: NewsCategory) -> Unit,
         onScrollListToTopClicked: () -> Unit,
         scrollListToTopButtonVisible: Boolean,
+        refreshState: PullRefreshState,
+        isRefreshing:Boolean,
         newsListState: LazyListState
     ) {
 
@@ -217,8 +203,7 @@ class HomeFragment : Fragment() {
             }
 
             AnimatedVisibility(visible = isLoadingNews.not() && newsList.isNotEmpty()) {
-                Box(modifier = Modifier) {
-
+                Box(modifier = Modifier.pullRefresh(state = refreshState, enabled = true)) {
                     NewsContent(
                         news = newsList,
                         modifier = Modifier
@@ -244,13 +229,15 @@ class HomeFragment : Fragment() {
                         }
                     }
 
+                    PullRefreshIndicator(
+                        refreshing = isRefreshing,
+                        state = refreshState,
+                        modifier = Modifier.align(Alignment.TopCenter)
+                    )
 
                 }
-
             }
-
         }
-
     }
 
     @Composable
@@ -270,7 +257,6 @@ class HomeFragment : Fragment() {
             },
             listState = newsListState
         )
-
     }
 
     private fun navigateToDetailFragment(url: String) {
@@ -297,6 +283,7 @@ class HomeFragment : Fragment() {
     }
 
 
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     @PreviewLightDark
     @Pixel6APreview
@@ -310,11 +297,14 @@ class HomeFragment : Fragment() {
                     onCategorySelected = {},
                     onScrollListToTopClicked = {},
                     scrollListToTopButtonVisible = true,
+                    refreshState = rememberPullRefreshState(
+                        refreshing = false,
+                        onRefresh = { }
+                    ),
+                    isRefreshing = true,
                     newsListState = rememberLazyListState()
                 )
             }
-
         }
     }
-
 }
