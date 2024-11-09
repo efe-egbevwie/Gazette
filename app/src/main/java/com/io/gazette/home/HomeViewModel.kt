@@ -8,15 +8,18 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.io.gazette.common.OneTimeEvent
 import com.io.gazette.data.repositories.NytRepository
-import com.io.gazette.domain.models.GetDataResult
 import com.io.gazette.domain.models.NewsCategory
 import com.io.gazette.domain.models.NewsItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,82 +30,65 @@ class HomeViewModel @Inject constructor(private val newsRepository: NytRepositor
         private set
 
     init {
-        getNews(NewsCategory.WORLD)
+        getNews()
     }
 
     fun onEvent(event: HomeScreenEvent) {
         when (event) {
-            is HomeScreenEvent.GetNews -> getNews(category = event.category)
+            is HomeScreenEvent.GetNews -> getNews()
             is HomeScreenEvent.RefreshNews -> refreshNews()
             is HomeScreenEvent.UpdateCategory -> {
-                val categoryUpdated = updateCategory(selectedCategory = event.newCategory)
-                if (categoryUpdated) getNews(category = event.newCategory)
+                 updateCategory(selectedCategory = event.newCategory)
             }
         }
     }
 
     private fun refreshNews() {
         viewModelScope.launch {
-
-            setRefreshingState(true)
-
-            when (val newsResult = newsRepository.refreshNews(state.value.selectedCategory)) {
-                is GetDataResult.Success -> {
-                    Timber.i("new result:${newsResult.data}")
-                    updateNewsState(news = newsResult.data)
-                }
-
-                is GetDataResult.Failure -> {
-                    state.update { currentState ->
-                        currentState.copy(
-                            error = OneTimeEvent(newsResult.exception)
-                        )
-                    }
-
+            newsRepository.refreshNews()
+                .onStart { setRefreshingState(isRefreshing = true) }
+                .catch { error ->
+                    updateErrorState(error as Exception)
                     setRefreshingState(isRefreshing = false)
                 }
-            }
+                .collect { news: List<NewsItem> ->
+                    setRefreshingState(isRefreshing = false)
+                    updateNewsState(news)
+                }
         }
 
     }
 
 
-    private fun getNews(category: NewsCategory) {
+    private fun getNews() {
         viewModelScope.launch {
-
-            updateCategory(category)
-            setLoadingState(isLoading = true)
-
-            when (val newsResult = newsRepository.getNewsByCategory(category)) {
-                is GetDataResult.Success -> {
-                    Timber.i("new result:$newsResult")
-                    updateNewsState(news = newsResult.data)
-                }
-
-                is GetDataResult.Failure -> {
-
+            newsRepository.getNews()
+                .onStart { setLoadingState(isLoading = true) }
+                .catch { error ->
+                    updateErrorState(error as Exception)
                     setLoadingState(isLoading = false)
-
-                    state.update { currentState ->
-                        currentState.copy(error = OneTimeEvent(newsResult.exception))
-                    }
                 }
-            }
+                .collect { news: List<NewsItem> ->
+                    setLoadingState(isLoading = false)
+                    updateNewsState(news)
+                }
         }
     }
 
 
-    private fun updateNewsState(news: Flow<List<NewsItem>>?) {
-        viewModelScope.launch {
-            news?.collect { newsList ->
-                state.update { currentState ->
-                    currentState.copy(
-                        newsContent = newsList,
-                        isLoading = false,
-                        isRefreshing = false
-                    )
-                }
-            }
+    private fun updateNewsState(news: List<NewsItem>) {
+        state.update { currentState ->
+            currentState.copy(
+                newsContent = news,
+                isLoading = false,
+                isRefreshing = false
+            )
+        }
+    }
+
+    private fun updateErrorState(error: Exception) {
+        state.update { currentState ->
+            currentState.copy(error = OneTimeEvent(error))
         }
     }
 
@@ -130,7 +116,6 @@ class HomeViewModel @Inject constructor(private val newsRepository: NytRepositor
 
 
     companion object {
-
         fun factory(newsRepository: NytRepository): ViewModelProvider.Factory {
             return viewModelFactory {
                 initializer {
@@ -146,10 +131,10 @@ class HomeViewModel @Inject constructor(private val newsRepository: NytRepositor
         val selectedCategory: NewsCategory = NewsCategory.WORLD,
         val newsContent: List<NewsItem> = listOf(),
         val newsListState: LazyListState = LazyListState(),
-        val error: OneTimeEvent<Exception>? = null
-    )
-
-
+        val error: OneTimeEvent<Exception>? = null,
+    ) {
+        val newsForCurrentCategory: List<NewsItem> get() = newsContent.filter { it.section.lowercase() == selectedCategory.name.lowercase() }
+    }
 }
 
 sealed class HomeScreenEvent {

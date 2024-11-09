@@ -6,16 +6,16 @@ import com.io.gazette.data.local.model.NewsEntity
 import com.io.gazette.data.remote.api.NytApi
 import com.io.gazette.data.remote.api.models.toNewsEntity
 import com.io.gazette.di.DeviceConnectivityUtil
-import com.io.gazette.domain.models.GetDataResult
 import com.io.gazette.domain.models.NewsCategory
 import com.io.gazette.domain.models.NewsItem
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.net.SocketException
 import javax.inject.Inject
+import kotlin.text.Typography.section
 
 class NytRepository @Inject constructor(
     private val nytApi: NytApi,
@@ -24,61 +24,41 @@ class NytRepository @Inject constructor(
 ) {
     private val deviceHasInternetConnection = connectivityModule.hasInternetConnection()
 
-    suspend fun refreshNews(category: NewsCategory): GetDataResult<Flow<List<NewsItem>>> {
-        return try {
-            if (!deviceHasInternetConnection) {
-                return GetDataResult.Failure(exception = SocketException())
-            }
-
-            coroutineScope {
-                launch { getNewsFromApi(section = NewsCategory.WORLD) }
-                launch { getNewsFromApi(section = NewsCategory.BUSINESS) }
-                launch { getNewsFromApi(section = NewsCategory.HEALTH) }
-                launch { getNewsFromApi(section = NewsCategory.SPORTS) }
-            }
-
-
-            val section = when (category) {
-                NewsCategory.WORLD -> "world"
-                NewsCategory.BUSINESS -> "business"
-                NewsCategory.HEALTH -> "health"
-                NewsCategory.SPORTS -> "sports"
-            }
-
-            GetDataResult.Success(data = getNewsFromDb(section = section))
-        } catch (e: Exception) {
-            GetDataResult.Failure(exception = e)
-        }
-
+    suspend fun refreshNews(): Flow<List<NewsItem>> = coroutineScope {
+        val allNews = listOf(
+            async { getNewsFromApi(section = NewsCategory.WORLD) },
+            async { getNewsFromApi(section = NewsCategory.HEALTH) },
+            async { getNewsFromApi(section = NewsCategory.BUSINESS) },
+            async { getNewsFromApi(section = NewsCategory.SPORTS) }
+        )
+        awaitAll(*allNews.toTypedArray())
+        getNewsFromDb()
     }
 
-    suspend fun getNewsByCategory(category: NewsCategory): GetDataResult<Flow<List<NewsItem>>> {
-        return try {
-
-            val section = when (category) {
-                NewsCategory.WORLD -> "world"
-                NewsCategory.BUSINESS -> "business"
-                NewsCategory.HEALTH -> "health"
-                NewsCategory.SPORTS -> "sports"
-            }
-
-            val newsFromDb = getNewsFromDb(section)
-
-            newsFromDb.first().ifEmpty {
-                Timber.i("news is empty")
-                getNewsFromApi(category)
-            }
-
-            GetDataResult.Success(data = getNewsFromDb(section = section))
-        } catch (e: Exception) {
-            GetDataResult.Failure(exception = e)
+    suspend fun getNews(): Flow<List<NewsItem>> {
+        val newsFromDb = getNewsFromDb()
+        newsFromDb.first().ifEmpty {
+            refreshNews()
         }
+        return getNewsFromDb()
+    }
 
+    suspend fun getNewsByCategory(category: NewsCategory): Flow<List<NewsItem>> {
+        val newsFromDb = getNewsFromDb(category.name.lowercase())
+        newsFromDb.first().ifEmpty {
+            Timber.i("news is empty")
+            getNewsFromApi(category)
+        }
+        return getNewsFromDb(section = category.name.lowercase())
     }
 
 
-    private fun getNewsFromDb(section: String): Flow<List<NewsItem>> {
-        return newsDao.getNewsAndBookmarkCountBySection(section)
+    private fun getNewsFromDb(section: String? = null): Flow<List<NewsItem>> {
+        return if (section.isNullOrBlank()) {
+            return newsDao.getAllNewsAndBookmarkCount()
+        } else {
+            newsDao.getNewsAndBookmarkCountBySection(section)
+        }
     }
 
     private suspend fun getNewsFromApi(section: NewsCategory) {
@@ -90,7 +70,8 @@ class NytRepository @Inject constructor(
                 NewsCategory.SPORTS -> nytApi.getTopSportsNews()
             }
 
-            val newsFromApiResults = newsFromApi.results?.map { it.toNewsEntity(fallBackSection = section.name.lowercase()) }
+            val newsFromApiResults =
+                newsFromApi.results?.map { it.toNewsEntity(fallBackSection = section.name.lowercase()) }
             if (newsFromApiResults?.isNotEmpty() == true) saveNewsToDb(newsFromApiResults)
         } catch (e: Exception) {
             Timber.e("exception getting news from API: $e")
@@ -100,6 +81,4 @@ class NytRepository @Inject constructor(
     private suspend fun saveNewsToDb(news: List<NewsEntity>) {
         newsDao.insertAllNews(news)
     }
-
-
 }

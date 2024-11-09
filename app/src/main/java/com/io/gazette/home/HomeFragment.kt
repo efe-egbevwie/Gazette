@@ -132,9 +132,7 @@ class HomeFragment : Fragment() {
                 newsListState.firstVisibleItemIndex > 0
             }
         }
-
         val scope = rememberCoroutineScope()
-
         fun scrollListToTop() {
             scope.launch {
                 state.newsListState.animateScrollToItem(0)
@@ -149,7 +147,7 @@ class HomeFragment : Fragment() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
-                newsList = state.newsContent,
+                newsList = state.newsForCurrentCategory,
                 isLoadingNews = state.isLoading,
                 selectedCategory = state.selectedCategory,
                 onCategorySelected = { category: NewsCategory ->

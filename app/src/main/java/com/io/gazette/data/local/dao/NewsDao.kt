@@ -17,6 +17,9 @@ interface NewsDao {
     @Query("SELECT title, abstract, section, url, writer, published_date as publishedDate, photo_url AS photoUrl,  read_later_stories.read_later_collection_id as readLaterCollectionId  FROM news   LEFT JOIN read_later_stories on news.url = read_later_stories.story_url WHERE news.section = :section  GROUP BY url ORDER BY published_date desc")
     fun getNewsAndBookmarkCountBySection(section: String): Flow<List<NewsItem>>
 
+    @Query("SELECT title, abstract, section, url, writer, published_date as publishedDate, photo_url AS photoUrl,  read_later_stories.read_later_collection_id as readLaterCollectionId  FROM news   LEFT JOIN read_later_stories on news.url = read_later_stories.story_url GROUP BY url ORDER BY published_date desc")
+    fun getAllNewsAndBookmarkCount(): Flow<List<NewsItem>>
+
     @Query("SELECT * FROM news where section=:section")
     fun getNewsBySection(section: String): Flow<List<NewsEntity>>
 
