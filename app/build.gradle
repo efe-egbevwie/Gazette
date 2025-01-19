@@ -10,7 +10,7 @@ plugins {
     id 'kotlin-parcelize'
 }
 
-def appVersion = "1.0"
+def appVersion = "1.0.2"
 
 android {
     compileSdk 34

@@ -23,7 +23,7 @@ jobs:
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
 
-      #1
+
       - name: Decode Keystore
         env:
           ENCODED_STRING: ${{ secrets.GAZETTE_SIGNING_KEY_BASE64 }}
@@ -37,7 +37,7 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      #2
+
       - name: Build Release apk
         env:
           GAZETTE_KEY_ALIAS: ${{ secrets.GAZETTE_KEY_ALIAS }}
@@ -48,7 +48,7 @@ jobs:
           export GAZETTE_KEY_ALIAS=${{ secrets.GAZETTE_KEY_ALIAS }}
           ./gradlew assembleRelease
 
-      #3
+
       - name: Upload Release Build to Artifacts
         uses: actions/upload-artifact@v4
         with:
