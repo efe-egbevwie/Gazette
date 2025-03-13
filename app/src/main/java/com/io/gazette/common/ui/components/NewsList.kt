@@ -7,8 +7,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.io.gazette.common.ui.Pixel6APreview
+import com.io.gazette.common.ui.theme.GazetteTheme
 import com.io.gazette.domain.models.NewsItem
 
 @Composable
@@ -19,7 +20,6 @@ fun NewsList(
     listState: LazyListState = rememberLazyListState(),
     onSaveStoryButtonClicked: (storyUrl: String, storyImageUrl: String?) -> Unit
 ) {
-
     LazyColumn(
         modifier,
         state = listState,
@@ -35,16 +35,17 @@ fun NewsList(
             }
         }
     }
-
 }
 
 
 @Composable
-@Pixel6APreview
+@PreviewLightDark
 fun NewsListPreview() {
-    NewsList(
-        modifier = Modifier.padding(10.dp),
-        newsItems = sampleNewsList,
-        onItemClick = {},
-        onSaveStoryButtonClicked = { _, _ -> })
+    GazetteTheme {
+        NewsList(
+            modifier = Modifier.padding(10.dp),
+            newsItems = sampleNewsList,
+            onItemClick = {},
+            onSaveStoryButtonClicked = { _, _ -> })
+    }
 }

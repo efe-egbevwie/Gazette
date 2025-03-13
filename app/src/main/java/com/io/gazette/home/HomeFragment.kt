@@ -39,14 +39,8 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import coil.ImageLoader
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
-import coil.request.ImageRequest
 import com.io.gazette.R
-import com.io.gazette.common.ui.Pixel6APreview
 import com.io.gazette.common.ui.components.LoadingScreen
 import com.io.gazette.common.ui.components.NewsCategories
 import com.io.gazette.common.ui.components.NewsList
@@ -58,59 +52,26 @@ import com.io.gazette.utils.navigateSafelyWithAnimations
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private val viewModel by viewModels<HomeViewModel>()
-    private lateinit var imageLoader: ImageLoader
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        imageLoader = ImageLoader(requireContext())
-            .newBuilder()
-            .memoryCache {
-                MemoryCache.Builder(requireContext())
-                    .maxSizePercent(0.25)
-                    .build()
-            }
-            .diskCache {
-                DiskCache.Builder()
-                    .directory(requireContext().cacheDir.resolve("image_cache"))
-                    .maxSizePercent(0.02)
-                    .build()
-            }
-            .build()
-
-        lifecycleScope.launch {
-            viewModel.state.collect { state ->
-                state.newsContent.forEach { newsItem ->
-                    cacheImages(newsItem.photoUrl)
-                }
-
-            }
-        }
-
-    }
-
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false).apply {
-            findViewById<ComposeView>(R.id.news_content_compose_view).apply {
-                setViewCompositionStrategy(
-                    ViewCompositionStrategy.Default
-                )
+        return ComposeView(requireContext())
+            .apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
                     GazetteTheme {
                         Surface {
                             NewsScreen()
                         }
-
                     }
                 }
             }
-        }
     }
 
 
@@ -139,30 +100,25 @@ class HomeFragment : Fragment() {
             }
         }
 
-        Box(
+        NewsScreenContent(
             modifier = Modifier
                 .fillMaxSize()
-        ) {
-            NewsScreenContent(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                newsList = state.newsForCurrentCategory,
-                isLoadingNews = state.isLoading,
-                selectedCategory = state.selectedCategory,
-                onCategorySelected = { category: NewsCategory ->
-                    viewModel.onEvent(event = HomeScreenEvent.UpdateCategory(newCategory = category))
-                    scrollListToTop()
-                },
-                onScrollListToTopClicked = {
-                    scrollListToTop()
-                },
-                scrollListToTopButtonVisible = newsListCanScrollToTop,
-                refreshState = refreshState,
-                isRefreshing = state.isRefreshing,
-                newsListState = state.newsListState
-            )
-        }
+                .padding(16.dp),
+            newsList = state.newsForCurrentCategory,
+            isLoadingNews = state.isLoading,
+            selectedCategory = state.selectedCategory,
+            onCategorySelected = { category: NewsCategory ->
+                viewModel.onEvent(event = HomeScreenEvent.UpdateCategory(newCategory = category))
+                scrollListToTop()
+            },
+            onScrollListToTopClicked = {
+                scrollListToTop()
+            },
+            scrollListToTopButtonVisible = newsListCanScrollToTop,
+            refreshState = refreshState,
+            isRefreshing = state.isRefreshing,
+            newsListState = state.newsListState
+        )
     }
 
 
@@ -177,7 +133,7 @@ class HomeFragment : Fragment() {
         onScrollListToTopClicked: () -> Unit,
         scrollListToTopButtonVisible: Boolean,
         refreshState: PullRefreshState,
-        isRefreshing:Boolean,
+        isRefreshing: Boolean,
         newsListState: LazyListState
     ) {
 
@@ -232,7 +188,6 @@ class HomeFragment : Fragment() {
                         state = refreshState,
                         modifier = Modifier.align(Alignment.TopCenter)
                     )
-
                 }
             }
         }
@@ -271,20 +226,10 @@ class HomeFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private fun cacheImages(imageUrl: String) {
-
-
-        val imageRequest = ImageRequest.Builder(requireContext())
-            .data(imageUrl)
-            .build()
-        imageLoader.enqueue(imageRequest)
-    }
-
 
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
     @PreviewLightDark
-    @Pixel6APreview
     fun NewScreenContentPreview() {
         GazetteTheme {
             Surface {

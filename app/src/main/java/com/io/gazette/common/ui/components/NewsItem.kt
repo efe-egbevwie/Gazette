@@ -26,9 +26,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.io.gazette.R
-import com.io.gazette.common.ui.Pixel6APreview
 import com.io.gazette.common.ui.theme.GazetteTheme
 import com.io.gazette.domain.models.NewsItem
 import java.time.LocalDateTime
@@ -61,8 +60,8 @@ fun NewsListItem(
                 modifier = modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.20F),
-                placeholder = painterResource(id = R.drawable.ic_news_item)
-
+                placeholder = painterResource(id = R.drawable.ic_news_item),
+                error = painterResource(id = R.drawable.ic_news_item)
             )
 
 
@@ -73,36 +72,35 @@ fun NewsListItem(
                 Text(
                     text = newsItem.title,
                     fontFamily = FontFamily.Serif,
+                    style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     modifier = modifier
                 )
 
-
                 Text(
                     text = newsItem.abstract,
                     fontSize = 18.sp,
+                    style = MaterialTheme.typography.bodyMedium,
                     modifier = modifier
                 )
-
-
 
                 Text(
                     text = newsItem.writer,
                     fontSize = 14.sp,
+                    style = MaterialTheme.typography.labelMedium,
                     textAlign = TextAlign.Start,
                     modifier = modifier
                         .fillMaxWidth()
-
                 )
 
                 Text(
                     text = newsItem.getFormattedDateTime(),
                     fontSize = 12.sp,
+                    style = MaterialTheme.typography.labelSmall,
                     textAlign = TextAlign.Start,
                     modifier = modifier
-                        .fillMaxWidth(0.6f)
-
+                        .fillMaxWidth()
                 )
 
                 val imageResource = if (newsItem.isSavedToAnyCollection()) {
@@ -123,17 +121,13 @@ fun NewsListItem(
                             )
                         }
                 )
-
             }
-
         }
-
-
     }
 }
 
 
-@Pixel6APreview
+
 @PreviewLightDark
 @Composable
 fun PreviewNewsListItem() {
@@ -160,6 +154,4 @@ fun PreviewNewsListItem() {
                 onSaveStoryButtonClicked = { _, _ -> })
         }
     }
-
-
 }

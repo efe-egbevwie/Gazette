@@ -9,34 +9,19 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class AddToReadLaterViewModel @Inject constructor(private val readLaterListRepository: ReadLaterListRepository) :
     ViewModel() {
 
-
     private val _createNewReadingListScreenState =
         MutableStateFlow(CreateNewReadLaterCollectionScreenState())
-
-    val createNewReadingListScreensState =
-        _createNewReadingListScreenState.asStateFlow()
 
     private val _addToReadingListScreenState =
         MutableStateFlow(AddToReadLaterCollectionScreenState())
 
     val addToReadLaterCollectionScreenState = _addToReadingListScreenState.asStateFlow()
-
-
-    init {
-        viewModelScope.launch {
-            val readLaterLists = readLaterListRepository.getReadLaterCollectionsAndInfo().collect {
-                Timber.i("read later lists: $it")
-            }
-        }
-
-    }
 
     fun onEvent(event: ReadLaterCollectionScreenEvent) {
         when (event) {
@@ -66,7 +51,7 @@ class AddToReadLaterViewModel @Inject constructor(private val readLaterListRepos
     }
 
     private fun createNewReadingList() = viewModelScope.launch {
-        val listTitle = _createNewReadingListScreenState.value.listTitle!!
+        val listTitle = _createNewReadingListScreenState.value.listTitle ?: return@launch
         readLaterListRepository.addNewReadLaterCollection(listTitle)
     }
 
@@ -74,7 +59,6 @@ class AddToReadLaterViewModel @Inject constructor(private val readLaterListRepos
     private fun getUserReadingLists() {
         viewModelScope.launch {
             readLaterListRepository.getReadLaterCollections().collect { userList ->
-                Timber.i("read later list: $userList")
                 _addToReadingListScreenState.update { currentState ->
                     currentState.copy(
                         userReadLaterCollections = userList

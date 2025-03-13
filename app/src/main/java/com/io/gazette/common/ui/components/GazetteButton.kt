@@ -1,7 +1,6 @@
 package com.io.gazette.common.ui.components
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -12,16 +11,16 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun GazetteButton(
     buttonTitle: String,
+    enabled:Boolean = true,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     Button(
         onClick = { onClick.invoke() },
+        shape = RoundedCornerShape(6.dp),
+        enabled = enabled,
         modifier = modifier
-            .fillMaxWidth(0.85f)
-            .size(48.dp)
-
     ) {
         Text(text = buttonTitle)
     }
@@ -31,5 +30,5 @@ fun GazetteButton(
 @Preview
 @Composable
 fun GazetteButtonPreview() {
-    GazetteButton(buttonTitle = "Button", onClick = { })
+    GazetteButton(buttonTitle = "Button", enabled = true, onClick = { })
 }

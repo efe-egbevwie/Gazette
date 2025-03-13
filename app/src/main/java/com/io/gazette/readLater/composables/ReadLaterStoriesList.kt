@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,18 +23,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.io.gazette.R
 import com.io.gazette.common.ui.components.sampleNewsItem
 import com.io.gazette.common.ui.components.sampleNewsList
 import com.io.gazette.common.ui.theme.GazetteTheme
 import com.io.gazette.domain.models.NewsItem
-import timber.log.Timber
 
 
 @Composable
@@ -44,27 +41,17 @@ fun ReadLaterStoriesList(
     newsItems: List<NewsItem>,
     modifier: Modifier = Modifier,
     onItemClick: (String) -> Unit,
-    onBookMarkiconClicked: (storyUrl: String) -> Unit
+    onBookmarkIconClicked: (storyUrl: String) -> Unit
 ) {
-
-    Timber.i("read later items: $newsItems")
-
-    val listState = rememberLazyListState()
-
-    LazyColumn(
-        modifier
-            .fillMaxSize(),
-        state = listState,
-    ) {
+    LazyColumn(modifier) {
         items(newsItems) { newsItem ->
             if (newsItem.isValid()) ReadLaterStoryItem(
                 newsItem = newsItem,
                 onItemClick = onItemClick,
-                onBookMarkIconClicked = onBookMarkiconClicked
+                onBookMarkIconClicked = onBookmarkIconClicked
             )
         }
     }
-
 }
 
 
@@ -113,8 +100,8 @@ fun ReadLaterStoryItem(
                         end.linkTo(parent.end)
                         bottom.linkTo(title.top)
                     },
-                placeholder = painterResource(id = R.drawable.ic_news_item)
-
+                placeholder = painterResource(id = R.drawable.ic_news_item),
+                error = painterResource(id = R.drawable.ic_news_item)
             )
 
 
@@ -200,13 +187,11 @@ fun ReadLaterStoryItem(
             )
 
         }
-
-
     }
 }
 
 
-@Preview
+@PreviewLightDark
 @Composable
 fun ReadLaterStoryItemPreview() {
     GazetteTheme {
@@ -218,14 +203,14 @@ fun ReadLaterStoryItemPreview() {
 }
 
 
-@Preview
+@PreviewLightDark
 @Composable
 fun ReadLaterStoriesListPreview() {
     GazetteTheme {
         ReadLaterStoriesList(
             newsItems = sampleNewsList,
             onItemClick = {},
-            onBookMarkiconClicked = {}
+            onBookmarkIconClicked = {}
         )
     }
 }

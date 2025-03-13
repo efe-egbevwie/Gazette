@@ -1,6 +1,5 @@
 package com.io.gazette.readLater.viewReadLater
 
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,12 +10,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.TextButton
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,13 +26,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.io.gazette.R
 import com.io.gazette.common.ui.components.sampleNewsList
 import com.io.gazette.common.ui.theme.GazetteTheme
 import com.io.gazette.domain.models.NewsItem
@@ -53,25 +50,14 @@ class ViewReadLaterCollectionFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_view_read_later_collection, container, false)
+        return ComposeView(requireContext())
             .apply {
-                findViewById<ComposeView>(R.id.view_read_later_compose_view).apply {
-
-                    setViewCompositionStrategy(
-                        ViewCompositionStrategy.DisposeOnLifecycleDestroyed(
-                            viewLifecycleOwner
-                        )
-                    )
-
-                    setContent {
-                        GazetteTheme {
-                            ViewReadLaterCollectionScreen()
-                        }
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    GazetteTheme {
+                        ViewReadLaterCollectionScreen()
                     }
-
                 }
-
-
             }
     }
 
@@ -97,7 +83,7 @@ class ViewReadLaterCollectionFragment : Fragment() {
                 storyUrlToDelete = storyUrl
                 showDeleteStoryConfirmationDialog = true
             },
-            onItemClicked = {storyUrl:String->
+            onItemClicked = { storyUrl: String ->
                 navigateToDetailFragment(storyUrl)
             }
         )
@@ -106,11 +92,8 @@ class ViewReadLaterCollectionFragment : Fragment() {
         if (showDeleteStoryConfirmationDialog) {
             ConfirmRemoveStoryDialog {
                 viewModel.onEvent(ViewReadLaterScreenEvent.RemoveStoryFromCollection(storyUrl = storyUrlToDelete))
-
             }
         }
-
-
     }
 
 
@@ -122,41 +105,29 @@ class ViewReadLaterCollectionFragment : Fragment() {
         onBookmarkIconClicked: (storyUrl: String) -> Unit,
         onItemClicked: (storyUrl: String) -> Unit
     ) {
+        Column {
+            Text(
+                text = readLaterCollectionTitle,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(start = 16.dp, top = 20.dp)
+            )
 
+            Spacer(modifier = Modifier.height(20.dp))
 
-        Surface(modifier = Modifier.fillMaxSize()) {
-
-            Column {
-
-
-                Text(
-                    text = readLaterCollectionTitle,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(start = 16.dp, top = 20.dp)
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    if (isLoading) CircularProgressIndicator() else {
-                        ReadLaterStoriesList(
-                            newsItems = newsItems,
-                            onItemClick = onItemClicked,
-                            onBookMarkiconClicked = onBookmarkIconClicked
-                        )
-                    }
-
-
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                if (isLoading) CircularProgressIndicator() else {
+                    ReadLaterStoriesList(
+                        newsItems = newsItems,
+                        onItemClick = onItemClicked,
+                        onBookmarkIconClicked = onBookmarkIconClicked
+                    )
                 }
             }
-
         }
-
-
     }
 
     @Composable
@@ -198,18 +169,12 @@ class ViewReadLaterCollectionFragment : Fragment() {
             ViewReadLaterCollectionFragmentDirections.actionViewReadLaterCollectionFragmentToDetailFragment(
                 storyUrl
             )
-
         findNavController().navigateSafelyWithAnimations(action)
     }
 
-    @Preview(
-        uiMode = Configuration.UI_MODE_NIGHT_YES or Configuration.UI_MODE_TYPE_NORMAL,
-        showSystemUi = true,
-        showBackground = true
-    )
+    @PreviewLightDark
     @Composable
     fun ViewReadLaterCollectionContentPreview() {
-
         GazetteTheme {
             ViewReadLaterCollectionContent(
                 isLoading = false,
@@ -218,11 +183,8 @@ class ViewReadLaterCollectionFragment : Fragment() {
                 onBookmarkIconClicked = {},
                 onItemClicked = {}
             )
-
         }
     }
-
-
 }
 
 
