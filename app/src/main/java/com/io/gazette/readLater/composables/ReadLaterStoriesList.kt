@@ -193,7 +193,7 @@ fun ReadLaterStoryItem(
 
 @PreviewLightDark
 @Composable
-fun ReadLaterStoryItemPreview() {
+private fun ReadLaterStoryItemPreview() {
     GazetteTheme {
         ReadLaterStoryItem(
             newsItem = sampleNewsItem,
@@ -205,7 +205,7 @@ fun ReadLaterStoryItemPreview() {
 
 @PreviewLightDark
 @Composable
-fun ReadLaterStoriesListPreview() {
+private fun ReadLaterStoriesListPreview() {
     GazetteTheme {
         ReadLaterStoriesList(
             newsItems = sampleNewsList,

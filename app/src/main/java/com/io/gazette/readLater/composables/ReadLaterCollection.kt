@@ -55,7 +55,6 @@ fun ReadLaterCollectionItem(
                 .padding(10.dp)
         ) {
 
-
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = readLaterCollection.collectionTitle,

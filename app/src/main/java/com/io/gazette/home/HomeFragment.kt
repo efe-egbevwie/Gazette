@@ -56,7 +56,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private val viewModel by viewModels<HomeViewModel>()
-    
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -77,7 +77,7 @@ class HomeFragment : Fragment() {
 
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
-    fun NewsScreen() {
+    private fun NewsScreen() {
         val state: HomeViewModel.HomeScreenState by viewModel.state.collectAsState()
         val refreshState: PullRefreshState =
             rememberPullRefreshState(
@@ -124,7 +124,7 @@ class HomeFragment : Fragment() {
 
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
-    fun NewsScreenContent(
+    private fun NewsScreenContent(
         modifier: Modifier = Modifier,
         newsList: List<NewsItem>,
         isLoadingNews: Boolean,
@@ -230,7 +230,7 @@ class HomeFragment : Fragment() {
     @OptIn(ExperimentalMaterialApi::class)
     @Composable
     @PreviewLightDark
-    fun NewScreenContentPreview() {
+    private fun NewScreenContentPreview() {
         GazetteTheme {
             Surface {
                 NewsScreenContent(

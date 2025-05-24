@@ -11,12 +11,9 @@ import com.io.gazette.data.repositories.NytRepository
 import com.io.gazette.domain.models.NewsCategory
 import com.io.gazette.domain.models.NewsItem
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -24,8 +21,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val newsRepository: NytRepository) : ViewModel() {
-
-
     var state = MutableStateFlow(HomeScreenState())
         private set
 
@@ -44,7 +39,7 @@ class HomeViewModel @Inject constructor(private val newsRepository: NytRepositor
     }
 
     private fun refreshNews() {
-        viewModelScope.launch {
+        viewModelScope.launch (context = Dispatchers.IO){
             newsRepository.refreshNews()
                 .onStart { setRefreshingState(isRefreshing = true) }
                 .catch { error ->
@@ -59,9 +54,8 @@ class HomeViewModel @Inject constructor(private val newsRepository: NytRepositor
 
     }
 
-
     private fun getNews() {
-        viewModelScope.launch {
+        viewModelScope.launch (context = Dispatchers.IO){
             newsRepository.getNews()
                 .onStart { setLoadingState(isLoading = true) }
                 .catch { error ->
