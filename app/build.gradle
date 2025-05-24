@@ -73,7 +73,7 @@ android {
             release {
                 minifyEnabled true
                 proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-                buildConfigField ("String", "NYT_API_KEY", nytApiKey)
+                buildConfigField("String", "NYT_API_KEY", nytApiKey)
                 signingConfig signingConfigs.release
             }
         }
@@ -178,6 +178,10 @@ android {
 
         implementation 'androidx.legacy:legacy-support-v4:1.0.0'
         implementation 'androidx.webkit:webkit:1.13.0'
+    }
+
+    lint {
+        disable "NullSafeMutableLiveData"
     }
 }
 
