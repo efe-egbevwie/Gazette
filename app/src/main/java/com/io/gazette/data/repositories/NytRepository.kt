@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.text.Typography.section
 
 class NytRepository @Inject constructor(
     private val nytApi: NytApi,

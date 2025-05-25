@@ -33,15 +33,15 @@ class HomeViewModel @Inject constructor(private val newsRepository: NytRepositor
             is HomeScreenEvent.GetNews -> getNews()
             is HomeScreenEvent.RefreshNews -> refreshNews()
             is HomeScreenEvent.UpdateCategory -> {
-                 updateCategory(selectedCategory = event.newCategory)
+                updateCategory(selectedCategory = event.newCategory)
             }
         }
     }
 
     private fun refreshNews() {
-        viewModelScope.launch (context = Dispatchers.IO){
+        viewModelScope.launch(context = Dispatchers.IO) {
+            setRefreshingState(isRefreshing = true)
             newsRepository.refreshNews()
-                .onStart { setRefreshingState(isRefreshing = true) }
                 .catch { error ->
                     updateErrorState(error as Exception)
                     setRefreshingState(isRefreshing = false)
@@ -51,13 +51,12 @@ class HomeViewModel @Inject constructor(private val newsRepository: NytRepositor
                     updateNewsState(news)
                 }
         }
-
     }
 
     private fun getNews() {
-        viewModelScope.launch (context = Dispatchers.IO){
+        viewModelScope.launch(context = Dispatchers.IO) {
+            setLoadingState(isLoading = true)
             newsRepository.getNews()
-                .onStart { setLoadingState(isLoading = true) }
                 .catch { error ->
                     updateErrorState(error as Exception)
                     setLoadingState(isLoading = false)

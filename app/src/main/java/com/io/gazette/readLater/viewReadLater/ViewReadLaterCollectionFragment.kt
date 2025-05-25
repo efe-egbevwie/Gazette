@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -62,12 +64,11 @@ class ViewReadLaterCollectionFragment : Fragment() {
     }
 
     @Composable
-    fun ViewReadLaterCollectionScreen() {
-        val state = viewModel.state.collectAsState()
+    private fun ViewReadLaterCollectionScreen() {
+        val state: ViewReaLaterState by viewModel.state.collectAsState()
         var showDeleteStoryConfirmationDialog by remember {
             mutableStateOf(false)
         }
-
         var storyUrlToDelete by remember {
             mutableStateOf("")
         }
@@ -76,8 +77,8 @@ class ViewReadLaterCollectionFragment : Fragment() {
             viewModel.onEvent(ViewReadLaterScreenEvent.GetStoriesInCollection(args.collectionId))
         }
         ViewReadLaterCollectionContent(
-            isLoading = state.value.isLoading,
-            newsItems = state.value.newsItems,
+            isLoading = state.isLoading,
+            newsItems = state.newsItems,
             readLaterCollectionTitle = args.collectionTitle,
             onBookmarkIconClicked = { storyUrl ->
                 storyUrlToDelete = storyUrl
@@ -88,7 +89,6 @@ class ViewReadLaterCollectionFragment : Fragment() {
             }
         )
 
-
         if (showDeleteStoryConfirmationDialog) {
             ConfirmRemoveStoryDialog {
                 viewModel.onEvent(ViewReadLaterScreenEvent.RemoveStoryFromCollection(storyUrl = storyUrlToDelete))
@@ -98,7 +98,7 @@ class ViewReadLaterCollectionFragment : Fragment() {
 
 
     @Composable
-    fun ViewReadLaterCollectionContent(
+    private fun ViewReadLaterCollectionContent(
         isLoading: Boolean,
         readLaterCollectionTitle: String,
         newsItems: List<NewsItem>,
@@ -108,6 +108,7 @@ class ViewReadLaterCollectionFragment : Fragment() {
         Column {
             Text(
                 text = readLaterCollectionTitle,
+                fontWeight = FontWeight.Black,
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(start = 16.dp, top = 20.dp)
             )
@@ -121,6 +122,8 @@ class ViewReadLaterCollectionFragment : Fragment() {
             ) {
                 if (isLoading) CircularProgressIndicator() else {
                     ReadLaterStoriesList(
+                        modifier = Modifier
+                            .fillMaxSize(),
                         newsItems = newsItems,
                         onItemClick = onItemClicked,
                         onBookmarkIconClicked = onBookmarkIconClicked
@@ -131,20 +134,18 @@ class ViewReadLaterCollectionFragment : Fragment() {
     }
 
     @Composable
-    fun ConfirmRemoveStoryDialog(
+    private fun ConfirmRemoveStoryDialog(
         onConfirm: () -> Unit
     ) {
         var isOpened by remember {
             mutableStateOf(true)
         }
-
         if (!isOpened) return
 
         AlertDialog(
             title = {
                 Text(text = "Delete story from collection?")
             },
-
             onDismissRequest = { isOpened = false },
             confirmButton = {
                 TextButton(

@@ -90,23 +90,21 @@ class ReadLaterCollectionsFragment : Fragment() {
         onCollectionClicked: (collectionId: Int, collectionTitle: String) -> Unit,
         onDeleteCollectionClicked: (collectionId: Int) -> Unit
     ) {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            Column {
-                Text(
-                    text = "Read Later Collections",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 23.sp,
-                    modifier = Modifier.padding(start = 16.dp, top = 20.dp)
-                )
+        Column {
+            Text(
+                text = "Read Later Collections",
+                fontWeight = FontWeight.Bold,
+                fontSize = 23.sp,
+                modifier = Modifier.padding(start = 16.dp, top = 20.dp)
+            )
 
-                Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
-                ReadLaterCollectionsList(
-                    readLaterCollections = readLaterCollections,
-                    onCollectionItemClicked = onCollectionClicked,
-                    onDeleteCollectionClicked = onDeleteCollectionClicked
-                )
-            }
+            ReadLaterCollectionsList(
+                readLaterCollections = readLaterCollections,
+                onCollectionItemClicked = onCollectionClicked,
+                onDeleteCollectionClicked = onDeleteCollectionClicked
+            )
         }
     }
 

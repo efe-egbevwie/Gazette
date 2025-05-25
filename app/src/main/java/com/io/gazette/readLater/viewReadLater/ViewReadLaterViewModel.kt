@@ -30,7 +30,6 @@ class ViewReadLaterViewModel @Inject constructor(private val readLaterRepository
     }
 
     private fun getStoriesInReadLaterCollection(collectionId: Int) {
-
         state.update { currentState ->
             currentState.copy(isLoading = true)
         }
@@ -50,8 +49,6 @@ class ViewReadLaterViewModel @Inject constructor(private val readLaterRepository
             readLaterRepository.deleteStoryFromCollection(storyUrl)
         }
     }
-
-
 }
 
 data class ViewReaLaterState(

@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,7 +32,6 @@ class ReadLaterCollectionsViewModel @Inject constructor(private val readLaterRep
         viewModelScope.launch {
             updateScreenState(isLoading = true)
             readLaterRepository.getReadLaterCollectionsAndInfo().collect { collections ->
-                Timber.i("my read later: $collections")
                 updateScreenState(isLoading = false, readLaterCollections = collections)
             }
         }
@@ -45,7 +43,6 @@ class ReadLaterCollectionsViewModel @Inject constructor(private val readLaterRep
             readLaterRepository.deleteReadLaterCollection(collectionId)
         }
     }
-
 
 
     private fun updateScreenState(

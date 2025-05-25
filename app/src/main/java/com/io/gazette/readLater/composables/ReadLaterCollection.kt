@@ -1,7 +1,7 @@
 package com.io.gazette.readLater.composables
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,19 +13,24 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.io.gazette.R
 import com.io.gazette.common.ui.Pixel6APreview
 import com.io.gazette.domain.models.ReadLaterCollection
 
@@ -37,25 +42,34 @@ fun ReadLaterCollectionItem(
     onDeleteCollectionClicked: (collectionId: Int) -> Unit,
     firstThreeStoryImageUrls: List<String>,
     modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .padding(8.dp)
 ) {
 
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable {
-                onItemClicked.invoke(readLaterCollection.collectionId)
-            },
-        border = BorderStroke(width = 2.dp, color = colorResource(id = R.color.colorPrimary)),
-        elevation = CardDefaults.cardElevation(20.dp),
-        shape = RoundedCornerShape(4.dp)
+        modifier = modifier,
+        onClick = {
+            onItemClicked.invoke(readLaterCollection.collectionId)
+        },
+        border = BorderStroke(
+            width = 2.dp,
+            color = MaterialTheme.colorScheme.primary
+        ) ,
+        elevation = CardDefaults.cardElevation(2.dp),
+        shape = RoundedCornerShape(8.dp)
     ) {
+        var showDeleteDialog by rememberSaveable {
+            mutableStateOf(false)
+        }
+
         Column(
             modifier = Modifier
                 .padding(10.dp)
         ) {
-
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
                 Text(
                     text = readLaterCollection.collectionTitle,
                     fontWeight = FontWeight.Bold,
@@ -65,7 +79,9 @@ fun ReadLaterCollectionItem(
 
 
                 IconButton(
-                    onClick = { onDeleteCollectionClicked.invoke(readLaterCollection.collectionId) },
+                    onClick = {
+                        showDeleteDialog = true
+                    },
                     modifier = Modifier
                         .weight(1f)
                         .padding(0.dp)
@@ -77,7 +93,7 @@ fun ReadLaterCollectionItem(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             val storyCountText = if (readLaterCollection.storyCount == 1) {
                 "${readLaterCollection.storyCount} story"
@@ -85,10 +101,61 @@ fun ReadLaterCollectionItem(
                 "${readLaterCollection.storyCount} stories"
             }
 
-            Text(text = storyCountText, fontSize = 20.sp)
+            Text(
+                text = storyCountText,
+                style = MaterialTheme.typography.labelLarge
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            ReadLaterStoriesImages(
+                modifier = Modifier,
+                imageUrls = firstThreeStoryImageUrls
+            )
 
+            if (showDeleteDialog) {
+                AlertDialog(
+                    onDismissRequest = {
+                        showDeleteDialog = false
+                    },
+                    title = {
+                        Column {
+                            Text(
+                                text = "Are you sure you want to delete \"${readLaterCollection.collectionTitle}\" "
+                            )
+                            Spacer(
+                                modifier = Modifier
+                                    .height(10.dp)
+                            )
+                            Text(
+                                text = "All Stories saved to this collection will be deleted",
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = FontWeight.Normal
+                            )
+                        }
 
-            ReadLaterStoriesImages(modifier = modifier, imageUrls = firstThreeStoryImageUrls)
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                onDeleteCollectionClicked(readLaterCollection.collectionId)
+                                showDeleteDialog = false
+                            }
+                        ) {
+                            Text(
+                                text = "Delete"
+                            )
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(
+                            onClick = {
+                                showDeleteDialog = false
+                            }
+                        ) {
+                            Text(text = "Cancel")
+                        }
+                    }
+                )
+            }
         }
     }
 }
@@ -96,11 +163,12 @@ fun ReadLaterCollectionItem(
 
 @Composable
 fun ReadLaterCollectionsList(
+    modifier: Modifier = Modifier,
     readLaterCollections: List<ReadLaterCollection>,
     onCollectionItemClicked: (collectionId: Int, collectionTitle: String) -> Unit,
     onDeleteCollectionClicked: (collectionId: Int) -> Unit
 ) {
-    LazyColumn {
+    LazyColumn (modifier = modifier){
         items(readLaterCollections) { collection: ReadLaterCollection ->
             ReadLaterCollectionItem(
                 readLaterCollection = collection,
@@ -113,7 +181,6 @@ fun ReadLaterCollectionsList(
                 onDeleteCollectionClicked = { onDeleteCollectionClicked.invoke(collection.collectionId) },
                 firstThreeStoryImageUrls = collection.getThreeImageUrls() ?: emptyList()
             )
-
         }
     }
 
