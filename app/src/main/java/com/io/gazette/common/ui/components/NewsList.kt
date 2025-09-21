@@ -29,9 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.integration.compose.placeholder
+import coil3.compose.AsyncImage
 import com.io.gazette.R
 import com.io.gazette.common.ui.theme.GazetteTheme
 import com.io.gazette.domain.models.NewsItem
@@ -63,7 +61,6 @@ fun NewsList(
 }
 
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun NewsListItem(
     newsItem: NewsItem,
@@ -90,27 +87,16 @@ private fun NewsListItem(
                 .background(color = MaterialTheme.colorScheme.surface)
         ) {
 
-            GlideImage(
+            AsyncImage(
                 model = newsItem.photoUrl,
                 contentDescription = "News Item Image",
-                loading = placeholder(R.drawable.ic_news_item),
-                failure = placeholder(R.drawable.ic_news_item),
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(300.dp)
+                    .height(300.dp),
+                placeholder = painterResource(id = R.drawable.ic_news_item),
+                error = painterResource(id = R.drawable.ic_news_item)
             )
-//            AsyncImage(
-//                model = newsItem.photoUrl,
-//                contentDescription = "News Item Image",
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .height(300.dp)
-//                    .padding(bottom = 8.dp),
-//                placeholder = painterResource(id = R.drawable.ic_news_item),
-//                error = painterResource(id = R.drawable.ic_news_item)
-//            )
-
 
             Column(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -127,14 +113,15 @@ private fun NewsListItem(
                 Text(
                     text = newsItem.abstract,
                     textAlign = TextAlign.Start,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Medium,
+                    style = MaterialTheme.typography.bodySmall,
+                    fontWeight = FontWeight.Normal,
                     modifier = Modifier
                         .fillMaxWidth()
                 )
 
                 Text(
                     text = newsItem.writer,
+                    fontWeight = FontWeight.Medium,
                     style = MaterialTheme.typography.bodySmall,
                     textAlign = TextAlign.Start,
                     modifier = Modifier
